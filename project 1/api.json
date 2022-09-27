@@ -1,0 +1,79 @@
+{
+	"openapi" : "3.0.3",
+	"info": {
+		"title": "Simple To Do List API",
+		"description": "API documentation of simple To Do list API.",
+		"version": "1",
+		"contact": {
+			"name": "Ach Rozikin",
+			"email": "geronimo794@gmail.com",
+			"url": "https://rozik.in"
+		},
+		"license": {
+			"name": "MIT"
+		}
+		
+	},
+	"servers": [{
+		"url": "{endpoint}",
+		"description": "Simple To Do List API Endpoint",
+		"variables": {
+			"endpoint": {
+				"default": "http://localhost:8080",
+				"description": "URL API Endpoint",
+				"enum": [
+					"http://localhost:8080",
+					"https://todoapi.rozik.in"
+				]
+			}
+		}
+	}],
+	"externalDocs": {
+		"description": "Blog Post Documentation of this Simple To Do List API",
+		"url": "https://blog.rozik.in/open-api-simple-todo-list"
+	},
+	"paths": {
+		"/todo" :{
+			"get" :{
+				"summary": "Get todo list data",
+				"description": "Get all todo list data with pagination operation",
+				"responses": {}
+			},
+			"post" :{
+				"summary": "Create todo data",
+				"description": "Create todo list data",
+				"responses": {}
+			}
+		},
+		"/todo/{id}":{
+			"get":{
+				"summary": "Get todo data",
+				"description": "Get single todo list data by spesific Id",
+				"responses": {}
+			},
+			"delete":{
+				"summary": "Delete todo data",
+				"description": "Delete single todo list data",
+				"responses": {}
+			},
+			"put":{
+				"summary": "Edit todo data",
+				"description": "Edit text of todo data",
+				"responses": {}
+			}
+		},
+		"/todo/{id}/check":{
+			"put":{
+				"summary": "Check todo data",
+				"description": "Doing check operation on todo data, and mark it as done."
+			}
+		},
+		"/todo/{id}/uncheck":{
+			"put":{
+				"summary": "Uncheck todo data",
+				"description": "Doing uncheck operation on todo data, and unmark it."
+			}
+		}
+
+	}
+}
