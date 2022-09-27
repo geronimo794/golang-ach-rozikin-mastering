@@ -1,5 +1,5 @@
 {
-	"openapi" : "3.0.3",
+	"openapi": "3.0.3",
 	"info": {
 		"title": "Simple To Do List API",
 		"description": "API documentation of simple To Do list API.",
@@ -12,68 +12,236 @@
 		"license": {
 			"name": "MIT"
 		}
-		
 	},
-	"servers": [{
-		"url": "{endpoint}",
-		"description": "Simple To Do List API Endpoint",
-		"variables": {
-			"endpoint": {
-				"default": "http://localhost:8080",
-				"description": "URL API Endpoint",
-				"enum": [
-					"http://localhost:8080",
-					"https://todoapi.rozik.in"
-				]
+	"servers": [
+		{
+			"url": "{endpoint}",
+			"description": "Simple To Do List API Endpoint",
+			"variables": {
+				"endpoint": {
+					"default": "http://localhost:8080",
+					"description": "URL API Endpoint",
+					"enum": [
+						"http://localhost:8080",
+						"https://todoapi.rozik.in"
+					]
+				}
 			}
 		}
-	}],
+	],
 	"externalDocs": {
 		"description": "Blog Post Documentation of this Simple To Do List API",
 		"url": "https://blog.rozik.in/open-api-simple-todo-list"
 	},
 	"paths": {
-		"/todo" :{
-			"get" :{
+		"/todo": {
+			"get": {
 				"summary": "Get todo list data",
 				"description": "Get all todo list data with pagination operation",
+				"parameters": [
+					{
+						"name": "status",
+						"description": "Get todo list data by user status : checked, unchecked, all.",
+						"in": "query",
+						"required": false,
+						"allowEmptyValue": true,
+						"schema": {
+							"type": "string",
+							"default": "all",
+							"enum": [
+								"all",
+								"checked",
+								"unchecked"
+							],
+							"nullable": true
+						}
+					},
+					{
+						"name": "keyword",
+						"description": "A keyword for search the to do list data by name",
+						"in": "query",
+						"required": false,
+						"allowEmptyValue": true,
+						"schema": {
+							"type": "string",
+							"default": "",
+							"nullable": true,
+							"minLength": 3,
+							"maxLength": 100
+						}
+					}
+				],
 				"responses": {}
 			},
-			"post" :{
+			"post": {
 				"summary": "Create todo data",
 				"description": "Create todo list data",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"required": true,
+										"minLength": 3,
+										"maxLength": 100,
+										"nullable": false
+									},
+									"priority": {
+										"type": "string",
+										"required": true,
+										"enum": [
+											"low",
+											"medium",
+											"high"
+										],
+										"default": "low",
+										"nullable": false
+									}
+								}
+							}
+						}
+					}
+				},
 				"responses": {}
 			}
 		},
-		"/todo/{id}":{
-			"get":{
+		"/todo/{id}": {
+			"get": {
 				"summary": "Get todo data",
 				"description": "Get single todo list data by spesific Id",
+				"parameters": [
+					{
+						"name": "id",
+						"description": "Id of the to do data",
+						"in": "path",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "integer",
+							"nullable": false,
+							"minimum": 1,
+							"maxLength": 100
+						}
+					}
+				],
 				"responses": {}
 			},
-			"delete":{
+			"delete": {
 				"summary": "Delete todo data",
 				"description": "Delete single todo list data",
+				"parameters": [
+					{
+						"name": "id",
+						"description": "Id of the to do data that want to be delete",
+						"in": "path",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "integer",
+							"nullable": false,
+							"minimum": 1,
+							"maxLength": 100
+						}
+					}
+				],
 				"responses": {}
 			},
-			"put":{
+			"put": {
 				"summary": "Edit todo data",
 				"description": "Edit text of todo data",
+				"parameters": [
+					{
+						"name": "id",
+						"description": "Id of the to do data that want to be change.",
+						"in": "path",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "integer",
+							"nullable": false,
+							"minimum": 1,
+							"maxLength": 100
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"required": true,
+										"minLength": 3,
+										"maxLength": 100,
+										"nullable": false
+									},
+									"priority": {
+										"type": "string",
+										"required": true,
+										"enum": [
+											"low",
+											"medium",
+											"high"
+										],
+										"default": "low",
+										"nullable": false
+									}
+								}
+							}
+						}
+					}
+				},
 				"responses": {}
 			}
 		},
-		"/todo/{id}/check":{
-			"put":{
+		"/todo/{id}/check": {
+			"put": {
 				"summary": "Check todo data",
-				"description": "Doing check operation on todo data, and mark it as done."
+				"description": "Doing check operation on todo data, and mark it as done.",
+				"parameters": [
+					{
+						"name": "id",
+						"description": "Id of the to do data that want to be check.",
+						"in": "path",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "integer",
+							"nullable": false,
+							"minimum": 1,
+							"maxLength": 100
+						}
+					}
+				]
 			}
 		},
-		"/todo/{id}/uncheck":{
-			"put":{
+		"/todo/{id}/uncheck": {
+			"put": {
 				"summary": "Uncheck todo data",
-				"description": "Doing uncheck operation on todo data, and unmark it."
+				"description": "Doing uncheck operation on todo data, and unmark it.",
+				"parameters": [
+					{
+						"name": "id",
+						"description": "Id of the to do data that want to be uncheck.",
+						"in": "path",
+						"required": true,
+						"allowEmptyValue": false,
+						"schema": {
+							"type": "integer",
+							"nullable": false,
+							"minimum": 1,
+							"maxLength": 100
+						}
+					}
+				]
 			}
 		}
-
 	}
 }
