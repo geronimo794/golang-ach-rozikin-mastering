@@ -36,44 +36,41 @@
 	"paths": {
 		"/todo": {
 			"get": {
+				"tags": [
+					"Get Data"
+				],
 				"summary": "Get todo list data",
 				"description": "Get all todo list data with pagination operation",
 				"parameters": [
 					{
-						"name": "status",
-						"description": "Get todo list data by user status : checked, unchecked, all.",
-						"in": "query",
-						"required": false,
-						"allowEmptyValue": true,
-						"schema": {
-							"type": "string",
-							"default": "all",
-							"enum": [
-								"all",
-								"checked",
-								"unchecked"
-							],
-							"nullable": true
-						}
+						"$ref": "#/components/parameters/todo-status"
 					},
 					{
-						"name": "keyword",
-						"description": "A keyword for search the to do list data by name",
-						"in": "query",
-						"required": false,
-						"allowEmptyValue": true,
-						"schema": {
-							"type": "string",
-							"default": "",
-							"nullable": true,
-							"minLength": 3,
-							"maxLength": 100
-						}
+						"$ref": "#/components/parameters/todo-keyword"
 					}
 				],
-				"responses": {}
+				"responses": {
+					"200": {
+						"description": "Get to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-list-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-list-data-example"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			"post": {
+				"tags": [
+					"Create Data"
+				],
 				"summary": "Create todo data",
 				"description": "Create todo list data",
 				"requestBody": {
@@ -81,91 +78,151 @@
 					"content": {
 						"multipart/form-data": {
 							"schema": {
-								"type": "object",
-								"properties": {
-									"name": {
-										"type": "string",
-										"required": true,
-										"minLength": 3,
-										"maxLength": 100,
-										"nullable": false
-									},
-									"priority": {
-										"type": "string",
-										"required": true,
-										"enum": [
-											"low",
-											"medium",
-											"high"
-										],
-										"default": "low",
-										"nullable": false
+								"$ref": "#/components/schemas/request-todo-data"
+							},
+							"examples": {
+								"kerja": {
+									"description": "Example create to do data with kerja",
+									"value": {
+										"name": "Mengerjakan servers dan migrasi data pengguna",
+										"priority": "high"
+									}
+								},
+								"belanaja": {
+									"description": "Example create to do data with belanja",
+									"value": {
+										"name": "Belanja makanan bulanan",
+										"priority": "medium"
 									}
 								}
 							}
 						}
 					}
 				},
-				"responses": {}
+				"responses": {
+					"200": {
+						"description": "Success save to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-data-example"
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/todo/{id}": {
 			"get": {
+				"tags": [
+					"Get Data"
+				],
 				"summary": "Get todo data",
 				"description": "Get single todo list data by spesific Id",
 				"parameters": [
 					{
-						"name": "id",
-						"description": "Id of the to do data",
-						"in": "path",
-						"required": true,
-						"allowEmptyValue": false,
-						"schema": {
-							"type": "integer",
-							"nullable": false,
-							"minimum": 1,
-							"maxLength": 100
-						}
+						"$ref": "#/components/parameters/todo-id"
 					}
 				],
-				"responses": {}
+				"responses": {
+					"200": {
+						"description": "Success get single to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-data"
+								},
+								"examples": {
+									"success": {
+										"description": "Example success save todo data",
+										"value": {
+											"id": 1,
+											"name": "Mengerjakan ujian pekerjaan rumah",
+											"priority": "high",
+											"status": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			"delete": {
+				"tags": [
+					"Delete Data"
+				],
 				"summary": "Delete todo data",
 				"description": "Delete single todo list data",
 				"parameters": [
 					{
-						"name": "id",
-						"description": "Id of the to do data that want to be delete",
-						"in": "path",
-						"required": true,
-						"allowEmptyValue": false,
-						"schema": {
-							"type": "integer",
-							"nullable": false,
-							"minimum": 1,
-							"maxLength": 100
-						}
+						"$ref": "#/components/parameters/todo-id"
 					}
 				],
-				"responses": {}
+				"responses": {
+					"200": {
+						"description": "Success delete to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
+								},
+								"examples": {
+									"success": {
+										"description": "Example success delete todo data",
+										"value": {
+											"success": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Failed delete to do list not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
+								},
+								"examples": {
+									"failed": {
+										"description": "Failed to delete to list not found",
+										"value": {
+											"success": false
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			"put": {
+				"tags": [
+					"Modify Data"
+				],
 				"summary": "Edit todo data",
 				"description": "Edit text of todo data",
 				"parameters": [
 					{
-						"name": "id",
-						"description": "Id of the to do data that want to be change.",
-						"in": "path",
-						"required": true,
-						"allowEmptyValue": false,
-						"schema": {
-							"type": "integer",
-							"nullable": false,
-							"minimum": 1,
-							"maxLength": 100
-						}
+						"$ref": "#/components/parameters/todo-id"
 					}
 				],
 				"requestBody": {
@@ -173,72 +230,246 @@
 					"content": {
 						"multipart/form-data": {
 							"schema": {
-								"type": "object",
-								"properties": {
-									"name": {
-										"type": "string",
-										"required": true,
-										"minLength": 3,
-										"maxLength": 100,
-										"nullable": false
-									},
-									"priority": {
-										"type": "string",
-										"required": true,
-										"enum": [
-											"low",
-											"medium",
-											"high"
-										],
-										"default": "low",
-										"nullable": false
+								"$ref": "#/components/schemas/request-todo-data"
+							},
+							"examples": {
+								"kerja": {
+									"description": "Example create to do data with kerja",
+									"value": {
+										"name": "Mengerjakan servers dan migrasi data pengguna",
+										"priority": "high"
+									}
+								},
+								"belanaja": {
+									"description": "Example create to do data with belanja",
+									"value": {
+										"name": "Belanja makanan bulanan",
+										"priority": "medium"
 									}
 								}
 							}
 						}
 					}
 				},
-				"responses": {}
+				"responses": {
+					"200": {
+						"description": "Success update single to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-data-example"
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/todo/{id}/check": {
 			"put": {
+				"tags": [
+					"Modify Data"
+				],
 				"summary": "Check todo data",
 				"description": "Doing check operation on todo data, and mark it as done.",
 				"parameters": [
 					{
-						"name": "id",
-						"description": "Id of the to do data that want to be check.",
-						"in": "path",
-						"required": true,
-						"allowEmptyValue": false,
-						"schema": {
-							"type": "integer",
-							"nullable": false,
-							"minimum": 1,
-							"maxLength": 100
+						"$ref": "#/components/parameters/todo-id"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success check single to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-data-example"
+									}
+								}
+							}
 						}
 					}
-				]
+				}
 			}
 		},
 		"/todo/{id}/uncheck": {
 			"put": {
+				"tags": [
+					"Modify Data"
+				],
 				"summary": "Uncheck todo data",
 				"description": "Doing uncheck operation on todo data, and unmark it.",
 				"parameters": [
 					{
-						"name": "id",
-						"description": "Id of the to do data that want to be uncheck.",
-						"in": "path",
-						"required": true,
-						"allowEmptyValue": false,
-						"schema": {
-							"type": "integer",
-							"nullable": false,
-							"minimum": 1,
-							"maxLength": 100
+						"$ref": "#/components/parameters/todo-id"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success check single to do list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-data-example"
+									}
+								}
+							}
 						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"todo-id": {
+				"name": "id",
+				"description": "Id of the to do data that want to be uncheck.",
+				"in": "path",
+				"required": true,
+				"allowEmptyValue": false,
+				"schema": {
+					"type": "integer",
+					"nullable": false,
+					"minimum": 1,
+					"maxLength": 100
+				}
+			},
+			"todo-status": {
+				"name": "status",
+				"description": "Get todo list data by user status : checked, unchecked, all.",
+				"in": "query",
+				"required": false,
+				"allowEmptyValue": true,
+				"schema": {
+					"type": "string",
+					"default": "all",
+					"enum": [
+						"all",
+						"checked",
+						"unchecked"
+					],
+					"nullable": true
+				}
+			},
+			"todo-keyword": {
+				"name": "keyword",
+				"description": "A keyword for search the to do list data by name",
+				"in": "query",
+				"required": false,
+				"allowEmptyValue": true,
+				"schema": {
+					"type": "string",
+					"default": "",
+					"nullable": true,
+					"minLength": 3,
+					"maxLength": 100
+				},
+				"examples": {
+					"belanja": {
+						"value": "belanja",
+						"description": "Example find to do data have keyword belanja"
+					},
+					"kerja": {
+						"value": "kerja",
+						"description": "Example find to do data have keyword kerja"
+					}
+				}
+			}
+		},
+		"schemas": {
+			"request-todo-data": {
+				"type": "object",
+				"required": [
+					"name",
+					"priority"
+				],
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 3,
+						"maxLength": 100,
+						"nullable": false,
+						"example": "Belanja makanan bulanan"
+					},
+					"priority": {
+						"type": "string",
+						"enum": [
+							"low",
+							"medium",
+							"high"
+						],
+						"default": "low",
+						"nullable": false
+					}
+				}
+			},
+			"response-todo-data": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"priority": {
+						"type": "string"
+					},
+					"status": {
+						"type": "integer",
+						"enum": [
+							0,
+							1
+						],
+						"description": "If checked is 1, if not checked 0"
+					}
+				}
+			},
+			"response-todo-list-data": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/response-todo-data"
+				}
+			}
+		},
+		"examples": {
+			"response-todo-data-example": {
+				"description": "Example success save todo data",
+				"value": {
+					"id": 1,
+					"name": "Mengerjakan ujian pekerjaan rumah",
+					"priority": "high",
+					"status": 1
+				}
+			},
+			"response-todo-list-data-example": {
+				"description": "Example success get all todo list",
+				"value": [
+					{
+						"id": 1,
+						"name": "Mengerjakan ujian pekerjaan rumah",
+						"priority": "high",
+						"status": 1
+					},
+					{
+						"id": 2,
+						"name": "Membersihkan rumah",
+						"priority": "medium",
+						"status": 0
 					}
 				]
 			}
