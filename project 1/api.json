@@ -101,19 +101,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Success save to do list data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/response-todo-data"
-								},
-								"examples": {
-									"success": {
-										"$ref": "#/components/examples/response-todo-data-example"
-									}
-								}
-							}
-						}
+						"$ref": "#/components/responses/single-data-response"
 					}
 				}
 			}
@@ -132,25 +120,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Success get single to do list data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/response-todo-data"
-								},
-								"examples": {
-									"success": {
-										"description": "Example success save todo data",
-										"value": {
-											"id": 1,
-											"name": "Mengerjakan ujian pekerjaan rumah",
-											"priority": "high",
-											"status": 1
-										}
-									}
-								}
-							}
-						}
+						"$ref": "#/components/responses/single-data-response"
 					}
 				}
 			},
@@ -253,19 +223,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Success update single to do list data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/response-todo-data"
-								},
-								"examples": {
-									"success": {
-										"$ref": "#/components/examples/response-todo-data-example"
-									}
-								}
-							}
-						}
+						"$ref": "#/components/responses/single-data-response"
 					}
 				}
 			}
@@ -284,19 +242,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Success check single to do list data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/response-todo-data"
-								},
-								"examples": {
-									"success": {
-										"$ref": "#/components/examples/response-todo-data-example"
-									}
-								}
-							}
-						}
+						"$ref": "#/components/responses/single-data-response"
 					}
 				}
 			}
@@ -315,19 +261,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "Success check single to do list data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/response-todo-data"
-								},
-								"examples": {
-									"success": {
-										"$ref": "#/components/examples/response-todo-data-example"
-									}
-								}
-							}
-						}
+						"$ref": "#/components/responses/single-data-response"
 					}
 				}
 			}
@@ -473,6 +407,24 @@
 					}
 				]
 			}
+		},
+		"responses": {
+			"single-data-response": {
+				"description": "Response data for single data operation",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/response-todo-data"
+						},
+						"examples": {
+							"success": {
+								"$ref": "#/components/examples/response-todo-data-example"
+							}
+						}
+					}
+				}
+			}
 		}
+
 	}
 }
