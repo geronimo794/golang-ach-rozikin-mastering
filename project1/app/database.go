@@ -19,8 +19,7 @@ func NewDatabase() *gorm.DB {
 	migrateTable(db)
 
 
-	tx := db.Session(&gorm.Session{SkipDefaultTransaction: true})
-	return tx
+	return db
 }
 func migrateTable(db *gorm.DB) {
 	db.AutoMigrate(&model.Todo{})

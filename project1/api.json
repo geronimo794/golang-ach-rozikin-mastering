@@ -22,7 +22,7 @@
 					"default": "http://localhost:8080",
 					"description": "URL API Endpoint",
 					"enum": [
-						"http://localhost:8080",
+						"http://localhost:3000",
 						"https://todoapi.rozik.in"
 					]
 				}
@@ -228,32 +228,13 @@
 				}
 			}
 		},
-		"/todo/{id}/check": {
+		"/todo/{id}/reverse-status": {
 			"put": {
 				"tags": [
 					"Modify Data"
 				],
 				"summary": "Check todo data",
 				"description": "Doing check operation on todo data, and mark it as done.",
-				"parameters": [
-					{
-						"$ref": "#/components/parameters/todo-id"
-					}
-				],
-				"responses": {
-					"200": {
-						"$ref": "#/components/responses/single-data-response"
-					}
-				}
-			}
-		},
-		"/todo/{id}/uncheck": {
-			"put": {
-				"tags": [
-					"Modify Data"
-				],
-				"summary": "Uncheck todo data",
-				"description": "Doing uncheck operation on todo data, and unmark it.",
 				"parameters": [
 					{
 						"$ref": "#/components/parameters/todo-id"

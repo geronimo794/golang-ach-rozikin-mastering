@@ -1,12 +1,12 @@
 package app
+
 import (
-	"net/http"
+
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project1/controller"
 	"github.com/labstack/echo/v4"
 )
 
-func SetRouter(e *echo.Echo) {
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+func SetRouter(e *echo.Echo, todoController controller.TodoController) {
+	e.POST("/todo", todoController.Create)
 
 }
