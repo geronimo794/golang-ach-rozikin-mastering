@@ -23,7 +23,9 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 	if err != nil {
 		return e.String(http.StatusBadRequest, err.Error())
 	}
-	controller.TodoService.Create(e.Request().Context(), request_data)
 
-	return e.String(http.StatusOK, request_data.Name)
+	response_data := model.Todo{}
+	response_data = controller.TodoService.Create(e.Request().Context(), request_data)
+
+	return e.JSON(http.StatusOK, response_data)
 }
