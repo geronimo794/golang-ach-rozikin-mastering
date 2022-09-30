@@ -25,19 +25,26 @@ func NewTodoService(todoRepository repository.TodoRepository, db *gorm.DB, valid
 	}
 }
 
-func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) model.Todo {
+func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) (model.Todo, error) {
 	err := service.Validate.Struct(request)
-	helper.PanicIfError(err)
+	if err != nil {
+		return model.Todo{}, err
+	}
 
 	tx := service.DB.Begin()
-	helper.PanicIfError(tx.Error)
+	if tx.Error != nil {
+		return model.Todo{}, err
+	}
+
 	defer helper.CommitOrRollback(tx)
 
 	todo := model.Todo{
-		Name: request.Name,
+		Name:     request.Name,
+		Priority: request.Priority,
 	}
 
 	todo = service.TodoRepository.Create(ctx, service.DB, todo)
 
-	return todo
+	return todo, nil
+
 }

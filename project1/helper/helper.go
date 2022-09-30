@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project1/model"
 	"gorm.io/gorm"
 )
 
@@ -19,4 +20,11 @@ func CommitOrRollback(tx *gorm.DB) {
 		errorCommit := tx.Commit().Error
 		PanicIfError(errorCommit)
 	}
+}
+func BuildResponse(data any, err []any) model.ResponseStandard {
+	response := model.ResponseStandard{
+		Data:  data,
+		Error: err,
+	}
+	return response
 }
