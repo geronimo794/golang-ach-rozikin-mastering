@@ -25,15 +25,11 @@ func NewTodoService(todoRepository repository.TodoRepository, db *gorm.DB, valid
 	}
 }
 
-func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) (model.Todo, error) {
-	err := service.Validate.Struct(request)
-	if err != nil {
-		return model.Todo{}, err
-	}
-
+func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) model.Todo {
+	// Create transaction
 	tx := service.DB.Begin()
 	if tx.Error != nil {
-		return model.Todo{}, err
+		helper.PanicIfError(tx.Error)
 	}
 
 	defer helper.CommitOrRollback(tx)
@@ -45,6 +41,6 @@ func (service *TodoServiceImpl) Create(ctx context.Context, request model.Reques
 
 	todo = service.TodoRepository.Create(ctx, service.DB, todo)
 
-	return todo, nil
+	return todo
 
 }

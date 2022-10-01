@@ -17,5 +17,5 @@ func main() {
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
 	app.SetRouter(e, todoController)
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Start(":3000")
 }

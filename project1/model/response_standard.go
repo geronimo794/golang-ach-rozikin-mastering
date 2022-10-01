@@ -1,8 +1,15 @@
 package model
 
+type ErrorResponse struct {
+	Title    string   `json:"title"`
+	Messages []string `json:"messages"`
+}
+
 type ResponseStandard struct {
-	Data  any `json:"data"`
-	Error []any `json:"error"`
+	Code    int             `json:"code"`
+	Message string          `json:"message"`
+	Data    any             `json:"data"`
+	Errors  []ErrorResponse `json:"errors"`
 	// Meta       any `json:"meta"`
 	// JsonApi    any `json:"jsonapi"`
 	// Links      any `json:"links"`

@@ -30,18 +30,14 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 	// Validate the form data
 	err := controller.Validate.Struct(request_data)
 
-	// If form data failed to validate
+	// // If form data failed to validate
 	if err != nil {
-		return e.JSON(http.StatusBadRequest, helper.BuildResponse(nil, []any{err.Error()}))
+		errs := helper.CreateValidationErrorResponse(err)
+		return helper.BuildJsonResponse(e, http.StatusBadRequest, nil, errs)
 	}
 
 	// Create repsponse
-	response_data := model.Todo{}
-	response_data, err = controller.TodoService.Create(e.Request().Context(), request_data)
+	response_data := controller.TodoService.Create(e.Request().Context(), request_data)
 
-	// If failed to save the data
-	if err != nil {
-		return e.JSON(http.StatusBadRequest, helper.BuildResponse(nil, []any{err.Error()}))
-	}
-	return e.JSON(http.StatusOK, helper.BuildResponse(response_data, nil))
+	return helper.BuildJsonResponse(e, http.StatusCreated, response_data, nil)
 }
