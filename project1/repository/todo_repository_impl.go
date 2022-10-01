@@ -19,3 +19,10 @@ func (repository TodoRepositoryImpl) Create(ctx context.Context, tx *gorm.DB, to
 	helper.PanicIfError(err)
 	return todo
 }
+
+func (repository TodoRepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, param model.RequestParameterTodo) (todos []model.Todo) {
+	
+	err := tx.Find(&todos).Error
+	helper.PanicIfError(err)
+	return todos
+}

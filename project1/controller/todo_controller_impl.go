@@ -41,3 +41,12 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 
 	return helper.BuildJsonResponse(e, http.StatusCreated, response_data, nil)
 }
+func (controller *TodoControllerImpl) FindAll(e echo.Context) error {
+	// Gather the form data
+	request_data := model.RequestParameterTodo{}
+	e.Bind(&request_data)
+
+	response_data := controller.TodoService.FindAll(e.Request().Context(), request_data)
+
+	return helper.BuildJsonResponse(e, http.StatusCreated, response_data, nil)
+}

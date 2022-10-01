@@ -6,7 +6,7 @@ import (
 
 type TodoController interface {
 	Create(echo.Context) error
-	// FindAll(echo.Context) error
+	FindAll(echo.Context) error
 	// Update(echo.Context) error
 	// Delete(echo.Context) error
 	// ReverseStatus(echo.Context) error

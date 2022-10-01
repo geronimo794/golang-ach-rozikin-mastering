@@ -1,6 +1,6 @@
 package model
 
 type RequestParameterTodo struct {
-	Keyword string `json:"name"`
+	Keyword string `json:"keyword"`
 	Status  int    `json:"status"`
 }

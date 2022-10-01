@@ -7,6 +7,7 @@ import (
 )
 
 func SetRouter(e *echo.Echo, todoController controller.TodoController) {
+	e.GET("/todo", todoController.FindAll)
 	e.POST("/todo", todoController.Create)
 
 	e.Use(middleware.Recover())

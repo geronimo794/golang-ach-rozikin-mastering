@@ -42,5 +42,7 @@ func (service *TodoServiceImpl) Create(ctx context.Context, request model.Reques
 	todo = service.TodoRepository.Create(ctx, service.DB, todo)
 
 	return todo
-
+}
+func (service *TodoServiceImpl) FindAll(ctx context.Context, request model.RequestParameterTodo) []model.Todo {
+	return service.TodoRepository.FindAll(ctx, service.DB, request)
 }
