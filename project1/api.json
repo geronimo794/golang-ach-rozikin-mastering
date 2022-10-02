@@ -59,7 +59,7 @@
 								},
 								"examples": {
 									"success": {
-										"$ref": "#/components/examples/response-todo-list-data-example"
+										"$ref": "#/components/examples/response-todo-list-200"
 									}
 								}
 							}
@@ -362,31 +362,39 @@
 			}
 		},
 		"examples": {
-			"response-todo-data-example": {
-				"description": "Example success save todo data",
+			"response-todo-single-200": {
+				"description": "Example of single response data",
 				"value": {
-					"id": 1,
-					"name": "Mengerjakan ujian pekerjaan rumah",
-					"priority": "high",
-					"status": 1
+					"code": 200,
+					"message": "OK",
+					"data": {
+						"id": 1,
+						"name": "Mengerjakan PR",
+						"priority": "low",
+						"status": 1
+					}
 				}
 			},
-			"response-todo-list-data-example": {
-				"description": "Example success get all todo list",
-				"value": [
-					{
-						"id": 1,
-						"name": "Mengerjakan ujian pekerjaan rumah",
-						"priority": "high",
-						"status": 1
-					},
-					{
-						"id": 2,
-						"name": "Membersihkan rumah",
-						"priority": "medium",
-						"status": 0
-					}
-				]
+			"response-todo-list-200": {
+				"description": "Example of list response data",
+				"value": {
+					"code": 200,
+					"message": "OK",
+					"data": [
+						{
+							"id": 1,
+							"name": "Mengerjakan PR",
+							"priority": "low",
+							"status": 1
+						},
+						{
+							"id": 2,
+							"name": "Mengerjakan PR",
+							"priority": "low",
+							"status": 1
+						}
+					]
+				}
 			}
 		},
 		"responses": {
@@ -399,13 +407,12 @@
 						},
 						"examples": {
 							"success": {
-								"$ref": "#/components/examples/response-todo-data-example"
+								"$ref": "#/components/examples/response-todo-single-200"
 							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 }
