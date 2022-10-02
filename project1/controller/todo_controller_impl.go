@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project1/helper"
@@ -44,29 +43,12 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 }
 func (controller *TodoControllerImpl) FindAll(e echo.Context) error {
 	// Gather the form data
-	request_data := model.RequestParameterTodo{}
-
-	err := echo.QueryParamsBinder(e).
+	request_data := model.RequestParameterTodo{
+		Status: -1,
+	}
+	echo.QueryParamsBinder(e).
 		String("keyword", &request_data.Keyword).
-		Uint8("status", &request_data.Status).
-		BindError() // returns first binding error
-	if err != nil {
-		errs := []model.ErrorResponse{
-			helper.CreateErrorResponse("Field", err.Error()),
-		}
-		return helper.BuildJsonResponse(e, http.StatusBadRequest, nil, errs)
-
-	}
-
-	fmt.Println(request_data)
-	// Validate the form data
-	err = controller.Validate.Struct(request_data)
-
-	// // If form data failed to validate
-	if err != nil {
-		errs := helper.CreateValidationErrorResponse(err)
-		return helper.BuildJsonResponse(e, http.StatusBadRequest, nil, errs)
-	}
+		Int8("status", &request_data.Status)
 
 	response_data := controller.TodoService.FindAll(e.Request().Context(), request_data)
 

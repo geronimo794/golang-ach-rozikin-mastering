@@ -50,11 +50,3 @@ func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []m
 	}
 	return sliceErrorResponse
 }
-func CreateEchoBindErrorResponse(echoBindError error) (sliceErrorResponse []model.ErrorResponse) {
-	var message string
-	for _, err := range echoBindError.(echo.Err) {
-		message = strings.Trim("is "+err.ActualTag()+" "+err.Param(), " ")
-		sliceErrorResponse = append(sliceErrorResponse, CreateErrorResponse(err.Field(), message))
-	}
-	return sliceErrorResponse
-}

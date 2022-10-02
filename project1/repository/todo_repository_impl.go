@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"strings"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project1/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project1/model"
@@ -21,7 +22,14 @@ func (repository TodoRepositoryImpl) Create(ctx context.Context, tx *gorm.DB, to
 }
 
 func (repository TodoRepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, param model.RequestParameterTodo) (todos []model.Todo) {
-	
+
+	if len(strings.Trim(param.Keyword, " ")) > 0 {
+		tx = tx.Where("name LIKE ?", "%"+param.Keyword+"%")
+	}
+
+	if param.Status != -1 {
+		tx = tx.Where("status = ?", param.Status)
+	}
 	err := tx.Find(&todos).Error
 	helper.PanicIfError(err)
 	return todos
