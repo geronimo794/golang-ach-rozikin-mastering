@@ -9,6 +9,6 @@ type TodoController interface {
 	FindAll(echo.Context) error
 	FindById(echo.Context) error
 	Update(echo.Context) error
-	// Delete(echo.Context) error
-	// ReverseStatus(echo.Context) error
+	Delete(echo.Context) error
+	ReverseStatus(echo.Context) error
 }

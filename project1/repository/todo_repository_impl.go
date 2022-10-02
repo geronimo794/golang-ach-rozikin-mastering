@@ -44,3 +44,7 @@ func (repository TodoRepositoryImpl) Update(ctx context.Context, tx *gorm.DB, to
 	helper.PanicIfError(err)
 	return todo
 }
+func (repository TodoRepositoryImpl) Delete(ctx context.Context, tx *gorm.DB, id int) {
+	err := tx.Delete(&model.Todo{}, id).Error
+	helper.PanicIfError(err)
+}

@@ -61,3 +61,39 @@ func (service *TodoServiceImpl) Update(ctx context.Context, todo model.Todo) mod
 
 	return todo
 }
+func (service *TodoServiceImpl) Delete(ctx context.Context, id int) model.Todo {
+	// Create transaction in this service
+	tx := helper.StartTransaction(service.DB)
+	defer helper.CommitOrRollback(tx)
+
+	// Check if db todo exist
+	db_todo := service.TodoRepository.FindById(ctx, tx, id)
+	if db_todo == (model.Todo{}) {
+		return db_todo
+	}
+
+	service.TodoRepository.Delete(ctx, service.DB, id)
+
+	return db_todo
+}
+func (service *TodoServiceImpl) ReverseStatus(ctx context.Context, id int) model.Todo {
+	// Create transaction in this service
+	tx := helper.StartTransaction(service.DB)
+	defer helper.CommitOrRollback(tx)
+
+	// Check if db todo exist
+	db_todo := service.TodoRepository.FindById(ctx, tx, id)
+	if db_todo == (model.Todo{}) {
+		return db_todo
+	}
+
+	// Reverse the status
+	if db_todo.Status == 0 {
+		db_todo.Status = 1
+	} else {
+		db_todo.Status = 0
+	}
+	db_todo = service.TodoRepository.Update(ctx, service.DB, db_todo)
+
+	return db_todo
+}

@@ -97,3 +97,25 @@ func (controller *TodoControllerImpl) Update(e echo.Context) error {
 
 	return helper.BuildJsonResponse(e, http.StatusOK, response_data, nil)
 }
+func (controller *TodoControllerImpl) Delete(e echo.Context) error {
+	// Gather request
+	param_id := e.Param("id")
+	id, _ := strconv.Atoi(param_id)
+
+	response_data := controller.TodoService.Delete(e.Request().Context(), id)
+	if (model.Todo{}) == response_data {
+		return helper.BuildJsonResponse(e, http.StatusNotFound, nil, nil)
+	}
+	return helper.BuildJsonResponse(e, http.StatusOK, response_data, nil)
+}
+func (controller *TodoControllerImpl) ReverseStatus(e echo.Context) error {
+	// Gather request
+	param_id := e.Param("id")
+	id, _ := strconv.Atoi(param_id)
+
+	response_data := controller.TodoService.ReverseStatus(e.Request().Context(), id)
+	if (model.Todo{}) == response_data {
+		return helper.BuildJsonResponse(e, http.StatusNotFound, nil, nil)
+	}
+	return helper.BuildJsonResponse(e, http.StatusOK, response_data, nil)
+}
