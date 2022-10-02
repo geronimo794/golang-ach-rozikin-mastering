@@ -26,12 +26,8 @@ func NewTodoService(todoRepository repository.TodoRepository, db *gorm.DB, valid
 }
 
 func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) model.Todo {
-	// Create transaction
-	tx := service.DB.Begin()
-	if tx.Error != nil {
-		helper.PanicIfError(tx.Error)
-	}
-
+	// Create transaction in this service
+	tx := helper.StartTransaction(service.DB)
 	defer helper.CommitOrRollback(tx)
 
 	todo := model.Todo{
@@ -45,4 +41,23 @@ func (service *TodoServiceImpl) Create(ctx context.Context, request model.Reques
 }
 func (service *TodoServiceImpl) FindAll(ctx context.Context, request model.RequestParameterTodo) []model.Todo {
 	return service.TodoRepository.FindAll(ctx, service.DB, request)
+}
+func (service *TodoServiceImpl) FindById(ctx context.Context, id int) model.Todo {
+	return service.TodoRepository.FindById(ctx, service.DB, id)
+}
+
+func (service *TodoServiceImpl) Update(ctx context.Context, todo model.Todo) model.Todo {
+	// Create transaction in this service
+	tx := helper.StartTransaction(service.DB)
+	defer helper.CommitOrRollback(tx)
+
+	// Check if db todo exist
+	db_todo := service.TodoRepository.FindById(ctx, tx, todo.Id)
+	if db_todo == (model.Todo{}) {
+		return db_todo
+	}
+
+	todo = service.TodoRepository.Update(ctx, service.DB, todo)
+
+	return todo
 }

@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
@@ -12,8 +13,18 @@ import (
 
 func PanicIfError(err error) {
 	if err != nil {
-		panic(err)
+		// If the error is error not found, no need to be panic
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			panic(err)
+		}
 	}
+}
+func StartTransaction(inputtx *gorm.DB) (tx *gorm.DB) {
+	tx = inputtx.Begin()
+	if tx.Error != nil {
+		PanicIfError(tx.Error)
+	}
+	return tx
 }
 func CommitOrRollback(tx *gorm.DB) {
 	err := recover()

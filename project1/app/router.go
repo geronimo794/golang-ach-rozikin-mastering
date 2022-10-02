@@ -9,6 +9,8 @@ import (
 func SetRouter(e *echo.Echo, todoController controller.TodoController) {
 	e.GET("/todo", todoController.FindAll)
 	e.POST("/todo", todoController.Create)
+	e.GET("/todo/:id", todoController.FindById)
+	e.PUT("/todo/:id", todoController.Update)
 
 	e.Use(middleware.Recover())
 
