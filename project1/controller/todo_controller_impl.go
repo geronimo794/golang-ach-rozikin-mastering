@@ -53,6 +53,9 @@ func (controller *TodoControllerImpl) FindAll(e echo.Context) error {
 		Int8("status", &request_data.Status)
 
 	response_data := controller.TodoService.FindAll(e.Request().Context(), request_data)
+	if len(response_data) == 0 {
+		return helper.BuildJsonResponse(e, http.StatusNotFound, nil, nil)
+	}
 
 	return helper.BuildJsonResponse(e, http.StatusOK, response_data, nil)
 }
