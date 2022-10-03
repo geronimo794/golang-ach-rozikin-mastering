@@ -8,6 +8,7 @@ import (
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/repository"
 )
 
@@ -25,7 +26,7 @@ func NewTodoService(todoRepository repository.TodoRepository, db *gorm.DB, valid
 	}
 }
 
-func (service *TodoServiceImpl) Create(ctx context.Context, request model.RequestTodo) model.Todo {
+func (service *TodoServiceImpl) Create(ctx context.Context, request web.RequestTodo) model.Todo {
 	// Create transaction in this service
 	tx := helper.StartTransaction(service.DB)
 	defer helper.CommitOrRollback(tx)
@@ -39,7 +40,7 @@ func (service *TodoServiceImpl) Create(ctx context.Context, request model.Reques
 
 	return todo
 }
-func (service *TodoServiceImpl) FindAll(ctx context.Context, request model.RequestParameterTodo) []model.Todo {
+func (service *TodoServiceImpl) FindAll(ctx context.Context, request web.RequestParameterTodo) []model.Todo {
 	return service.TodoRepository.FindAll(ctx, service.DB, request)
 }
 func (service *TodoServiceImpl) FindById(ctx context.Context, id int) model.Todo {

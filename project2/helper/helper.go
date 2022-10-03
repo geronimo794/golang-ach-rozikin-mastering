@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -37,8 +37,8 @@ func CommitOrRollback(tx *gorm.DB) {
 		PanicIfError(errorCommit)
 	}
 }
-func BuildJsonResponse(e echo.Context, http_status int, data any, err []model.ErrorResponse) error {
-	response := model.ResponseStandard{
+func BuildJsonResponse(e echo.Context, http_status int, data any, err []web.ErrorResponse) error {
+	response := web.ResponseStandard{
 		Code:    http_status,
 		Message: http.StatusText(http_status),
 		Data:    data,
@@ -46,14 +46,14 @@ func BuildJsonResponse(e echo.Context, http_status int, data any, err []model.Er
 	}
 	return e.JSON(http_status, response)
 }
-func CreateErrorResponse(title string, message ...string) model.ErrorResponse {
-	errResp := model.ErrorResponse{
+func CreateErrorResponse(title string, message ...string) web.ErrorResponse {
+	errResp := web.ErrorResponse{
 		Title:    title,
 		Messages: message,
 	}
 	return errResp
 }
-func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []model.ErrorResponse) {
+func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []web.ErrorResponse) {
 	var message string
 	for _, err := range validatorError.(validator.ValidationErrors) {
 		message = strings.Trim("is "+err.ActualTag()+" "+err.Param(), " ")

@@ -7,6 +7,7 @@ import (
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -25,7 +26,7 @@ func NewTodoController(todoService service.TodoService, validate *validator.Vali
 }
 func (controller *TodoControllerImpl) Create(e echo.Context) error {
 	// Gather the form data
-	request_data := model.RequestTodo{}
+	request_data := web.RequestTodo{}
 	request_data.Name = e.FormValue("name")
 	request_data.Priority = e.FormValue("priority")
 
@@ -45,7 +46,7 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 }
 func (controller *TodoControllerImpl) FindAll(e echo.Context) error {
 	// Gather the form data
-	request_data := model.RequestParameterTodo{
+	request_data := web.RequestParameterTodo{
 		Status: -1,
 	}
 	echo.QueryParamsBinder(e).

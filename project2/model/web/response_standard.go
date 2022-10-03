@@ -1,9 +1,4 @@
-package model
-
-type ErrorResponse struct {
-	Title    string   `json:"title"`
-	Messages []string `json:"messages"`
-}
+package web
 
 type ResponseStandard struct {
 	Code    int             `json:"code"`
@@ -17,4 +12,9 @@ type ResponseStandard struct {
 	// Self       any `json:"self"`
 	// Related    any `json:"related"`
 	// Pagination any `json:"pagination"`
+}
+
+type ErrorResponse struct {
+	Title    string   `json:"title"`
+	Messages []string `json:"messages"`
 }

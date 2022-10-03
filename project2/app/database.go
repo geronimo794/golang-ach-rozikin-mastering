@@ -22,4 +22,5 @@ func NewDatabase() *gorm.DB {
 }
 func migrateTable(db *gorm.DB) {
 	db.AutoMigrate(&model.Todo{})
+	db.AutoMigrate(&model.User{})
 }

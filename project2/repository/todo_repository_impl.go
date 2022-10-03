@@ -6,6 +6,7 @@ import (
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +21,7 @@ func (repository TodoRepositoryImpl) Create(ctx context.Context, tx *gorm.DB, to
 	helper.PanicIfError(err)
 	return todo
 }
-func (repository TodoRepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, param model.RequestParameterTodo) (todos []model.Todo) {
+func (repository TodoRepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, param web.RequestParameterTodo) (todos []model.Todo) {
 
 	if len(strings.Trim(param.Keyword, " ")) > 0 {
 		tx = tx.Where("name LIKE ?", "%"+param.Keyword+"%")

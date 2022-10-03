@@ -1,4 +1,4 @@
-package model
+package web
 
 type RequestParameterTodo struct {
 	Keyword string `json:"keyword" form:"keyword"`
