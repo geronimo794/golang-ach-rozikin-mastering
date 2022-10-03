@@ -1,7 +1,7 @@
 {
 	"openapi": "3.0.3",
 	"info": {
-		"title": "Simple To Do List API",
+		"title": "Simple To Do List API (Golang)",
 		"description": "API documentation of simple To Do list API.",
 		"version": "1",
 		"contact": {
