@@ -1,0 +1,474 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Simple To Do List API (Golang)",
+		"description": "API documentation of simple To Do list API.",
+		"version": "1",
+		"contact": {
+			"name": "Ach Rozikin",
+			"email": "geronimo794@gmail.com",
+			"url": "https://rozik.in"
+		},
+		"license": {
+			"name": "MIT"
+		}
+	},
+	"servers": [
+		{
+			"url": "{endpoint}",
+			"description": "Simple To Do List API Endpoint",
+			"variables": {
+				"endpoint": {
+					"default": "http://localhost:8080",
+					"description": "URL API Endpoint",
+					"enum": [
+						"http://localhost:3000",
+						"https://todoapi.rozik.in"
+					]
+				}
+			}
+		}
+	],
+	"externalDocs": {
+		"description": "Blog Post Documentation of this Simple To Do List API",
+		"url": "https://blog.rozik.in/open-api-simple-todo-list"
+	},
+	"paths": {
+		"/todo": {
+			"get": {
+				"tags": [
+					"Get Data"
+				],
+				"summary": "Get todo list data",
+				"description": "Get all todo list data with simple filter operation",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/param-status"
+					},
+					{
+						"$ref": "#/components/parameters/param-keyword"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success get todo list data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/response-todo-list-data"
+								},
+								"examples": {
+									"success": {
+										"$ref": "#/components/examples/response-todo-list-200"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"$ref": "#/components/responses/404-data-not-found-response"
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Create Data"
+				],
+				"summary": "Create todo data",
+				"description": "Create todo list data",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/request-todo-data"
+							},
+							"examples": {
+								"kerja": {
+									"description": "Example create to do data with kerja",
+									"value": {
+										"name": "Mengerjakan servers dan migrasi data pengguna",
+										"priority": "high"
+									}
+								},
+								"belanaja": {
+									"description": "Example create to do data with belanja",
+									"value": {
+										"name": "Belanja makanan bulanan",
+										"priority": "medium"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200-single-data-response"
+					}
+				}
+			}
+		},
+		"/todo/{id}": {
+			"get": {
+				"tags": [
+					"Get Data"
+				],
+				"summary": "Get todo data",
+				"description": "Get single todo list data by spesific Id",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/param-id"
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200-single-data-response"
+					},
+					"404": {
+						"$ref": "#/components/responses/404-data-not-found-response"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Delete Data"
+				],
+				"summary": "Delete todo data",
+				"description": "Delete single todo list data",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/param-id"
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200-single-data-response"
+					},
+					"404": {
+						"$ref": "#/components/responses/404-data-not-found-response"
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Modify Data"
+				],
+				"summary": "Edit todo data",
+				"description": "Edit text of todo data",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/param-id"
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/request-todo-data"
+							},
+							"examples": {
+								"kerja": {
+									"description": "Example create to do data with kerja",
+									"value": {
+										"name": "Mengerjakan servers dan migrasi data pengguna",
+										"priority": "high"
+									}
+								},
+								"belanaja": {
+									"description": "Example create to do data with belanja",
+									"value": {
+										"name": "Belanja makanan bulanan",
+										"priority": "medium"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200-single-data-response"
+					},
+					"404": {
+						"$ref": "#/components/responses/404-data-not-found-response"
+					}
+				}
+			}
+		},
+		"/todo/{id}/reverse-status": {
+			"put": {
+				"tags": [
+					"Modify Data"
+				],
+				"summary": "Reverse the status of the todo data",
+				"description": "Change status of the todo data. If status 1 it will be 0, if status 0 it will be 1.",
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/param-id"
+					}
+				],
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/200-single-data-response"
+					},
+					"404": {
+						"$ref": "#/components/responses/404-data-not-found-response"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"parameters": {
+			"param-id": {
+				"name": "id",
+				"description": "Identifier of data",
+				"in": "path",
+				"required": true,
+				"allowEmptyValue": false,
+				"schema": {
+					"type": "integer",
+					"nullable": false,
+					"minimum": 1,
+					"maxLength": 100
+				}
+			},
+			"param-status": {
+				"name": "status",
+				"description": "Status of the to do data",
+				"in": "query",
+				"required": false,
+				"allowEmptyValue": true,
+				"schema": {
+					"type": "integer",
+					"default": "-1",
+					"enum": [
+						"-1",
+						"0",
+						"1"
+					],
+					"nullable": true
+				}
+			},
+			"param-keyword": {
+				"name": "keyword",
+				"description": "Parameter keyword for searching",
+				"in": "query",
+				"required": false,
+				"allowEmptyValue": true,
+				"schema": {
+					"type": "string",
+					"default": "",
+					"nullable": true,
+					"minLength": 3,
+					"maxLength": 100
+				},
+				"examples": {
+					"belanja": {
+						"value": "belanja",
+						"description": "Example find to do data have keyword belanja"
+					},
+					"kerja": {
+						"value": "kerja",
+						"description": "Example find to do data have keyword kerja"
+					}
+				}
+			}
+		},
+		"schemas": {
+			"todo-data": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"priority": {
+						"type": "string"
+					},
+					"status": {
+						"type": "integer",
+						"enum": [
+							0,
+							1
+						],
+						"description": "If checked is 1, if not checked 0"
+					}
+				}
+			},
+			"request-todo-data": {
+				"type": "object",
+				"required": [
+					"name",
+					"priority"
+				],
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 3,
+						"maxLength": 100,
+						"nullable": false,
+						"example": "Belanja makanan bulanan"
+					},
+					"priority": {
+						"type": "string",
+						"enum": [
+							"low",
+							"medium",
+							"high"
+						],
+						"default": "low",
+						"nullable": false
+					}
+				}
+			},			
+			"response-standard": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "integer",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "OK"
+					},
+					"data": {
+						"type": "array",
+						"nullable": true
+					},
+					"errors": {
+						"type": "array",
+						"nullable": true
+					}
+				}
+			},
+
+			"response-todo-list-data": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "integer",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "OK"
+					},
+					"data": {
+						"type": "array",
+						"nullable": true,
+						"items": {
+							"$ref": "#/components/schemas/todo-data"
+						}
+					},
+					"errors": {
+						"type": "array",
+						"nullable": true
+					}
+				}
+			},
+			"response-todo-data": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "integer",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "OK"
+					},
+					"data": {
+						"$ref": "#/components/schemas/todo-data"
+					},
+					"errors": {
+						"type": "array",
+						"nullable": true
+					}
+				}
+			}
+		},
+		"examples": {
+			"response-404": {
+				"description": "Response data if data not available",
+				"value": {
+					"code": 404,
+					"message": "Not Found",
+					"data": null,
+					"errors": null
+				}
+			},
+			"response-todo-single-200": {
+				"description": "Example of single response data",
+				"value": {
+					"code": 200,
+					"message": "OK",
+					"data": {
+						"id": 1,
+						"name": "Mengerjakan PR",
+						"priority": "low",
+						"status": 1
+					}
+				}
+			},
+			"response-todo-list-200": {
+				"description": "Example of list response data",
+				"value": {
+					"code": 200,
+					"message": "OK",
+					"data": [
+						{
+							"id": 1,
+							"name": "Mengerjakan PR",
+							"priority": "low",
+							"status": 1
+						},
+						{
+							"id": 2,
+							"name": "Mengerjakan PR",
+							"priority": "low",
+							"status": 1
+						}
+					]
+				}
+			}
+		},
+		"responses": {
+			"200-single-data-response": {
+				"description": "Response data for single data operation",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/response-todo-data"
+						},
+						"examples": {
+							"success": {
+								"$ref": "#/components/examples/response-todo-single-200"
+							}
+						}
+					}
+				}
+			},
+			"404-data-not-found-response": {
+				"description": "Response if the operation data not found",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/response-standard"
+						},
+						"examples": {
+							"success": {
+								"$ref": "#/components/examples/response-404"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
