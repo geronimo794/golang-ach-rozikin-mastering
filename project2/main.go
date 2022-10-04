@@ -15,16 +15,17 @@ func main() {
 	e := echo.New()
 	validate := validator.New()
 
+	// Auth API
+	authService := service.NewAuthService()
+	authController := controller.NewAuthController(authService, validate)
+	app.SetRouterAuth(e, authController)
+
 	// Todo API
 	todoRepository := repository.NewTodoRepository()
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
 	app.SetRouterTodo(e, todoController)
 
-	// Auth API
-	authService := service.NewAuthService()
-	authController := controller.NewAuthController(authService, validate)
-	app.SetRouterAuth(e, authController)
 	e.Use(middleware.Recover())
 	e.Start(":3000")
 }
