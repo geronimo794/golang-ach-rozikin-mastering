@@ -7,15 +7,24 @@ import (
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/service"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 	db := app.NewDatabase()
 	e := echo.New()
 	validate := validator.New()
+
+	// Todo API
 	todoRepository := repository.NewTodoRepository()
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
-	app.SetRouter(e, todoController)
+	app.SetRouterTodo(e, todoController)
+
+	// Auth API
+	authService := service.NewAuthService()
+	authController := controller.NewAuthController(authService, validate)
+	app.SetRouterAuth(e, authController)
+	e.Use(middleware.Recover())
 	e.Start(":3000")
 }
