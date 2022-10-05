@@ -6,15 +6,11 @@ import (
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/config"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/helper"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/claim"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 
 	"github.com/golang-jwt/jwt"
 )
-
-type jwtCustomClaims struct {
-	Username string `json:"name"`
-	jwt.StandardClaims
-}
 
 type AuthServiceImpl struct {
 }
@@ -25,9 +21,9 @@ func NewAuthService() AuthService {
 func (service *AuthServiceImpl) GenerateToken(ctx context.Context, request web.RequestAuth) web.ResponseToken {
 
 	// Create claim or data for the JWT
-	claims := &jwtCustomClaims{
-		request.Username,
-		jwt.StandardClaims{
+	claims := &claim.JwtCustomClaims{
+		Username: request.Username,
+		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}

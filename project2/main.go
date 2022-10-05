@@ -20,11 +20,14 @@ func main() {
 	authController := controller.NewAuthController(authService, validate)
 	app.SetRouterAuth(e, authController)
 
+	// Set autentification group
+	eGroup := app.SetAuthJWTGroup(e)
+
 	// Todo API
 	todoRepository := repository.NewTodoRepository()
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
-	app.SetRouterTodo(e, todoController)
+	app.SetRouterTodo(eGroup, todoController)
 
 	e.Use(middleware.Recover())
 	e.Start(":3000")
