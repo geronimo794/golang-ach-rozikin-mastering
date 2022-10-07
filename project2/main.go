@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	db := app.NewDatabase()
+	db := app.NewDatabaseProduction()
 	e := echo.New()
 	validate := validator.New()
 
