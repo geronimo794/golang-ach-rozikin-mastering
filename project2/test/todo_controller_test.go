@@ -37,7 +37,7 @@ func createSampleTodoData(db *gorm.DB, todoRepository repository.TodoRepository)
 	todoData := model.Todo{
 		Name:     "Sample data low",
 		Priority: "low",
-		Status:   1,
+		Status:   0,
 	}
 	todoRepository.Create(db.Statement.Context, db, todoData)
 
@@ -64,26 +64,21 @@ func clearTodosData(db *gorm.DB) {
 
 // Struct test case
 type TestCaseRequestTodo struct {
-	Req          web.RequestTodo
-	ExpectedCode int
-	ExpectedData string
+	Req web.RequestTodo
+	Exp ExpectationResultTest
 }
 type TestCaseRequestParameterTodo struct {
-	Req             web.RequestParameterTodo
-	ExpectedCode    int
-	ExpectedData    string
-	NotExpectedData string
+	Req web.RequestParameterTodo
+	Exp ExpectationResultTest
 }
 type TestCaseRequestId struct {
-	ReqId        int
-	ExpectedCode int
-	ExpectedData string
+	ReqId int
+	Exp   ExpectationResultTest
 }
 type TestCaseRequestIdUpdateTodo struct {
-	ReqId        int
-	ReqData      model.Todo
-	ExpectedCode int
-	ExpectedData string
+	ReqId   int
+	ReqData model.Todo
+	Exp     ExpectationResultTest
 }
 
 // Testing Todo Controller
@@ -104,8 +99,10 @@ func TestTodoCreate(t *testing.T) {
 				Name:     "Create todo success",
 				Priority: "high",
 			},
-			ExpectedCode: http.StatusCreated,
-			ExpectedData: "Create todo success",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusCreated,
+				ExpectedData: "Create todo success",
+			},
 		},
 		// Check priority data
 		{
@@ -113,16 +110,20 @@ func TestTodoCreate(t *testing.T) {
 				Name:     "Create todo ok",
 				Priority: "low",
 			},
-			ExpectedCode: http.StatusCreated,
-			ExpectedData: "low",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusCreated,
+				ExpectedData: "low",
+			},
 		},
 		/**
 		* Failed test case
 		**/
 		// Empty all data
 		{
-			Req:          web.RequestTodo{},
-			ExpectedCode: http.StatusBadRequest,
+			Req: web.RequestTodo{},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+			},
 		},
 		// Empty priority data
 		{
@@ -130,8 +131,10 @@ func TestTodoCreate(t *testing.T) {
 				Name:     "Create todo ok",
 				Priority: "",
 			},
-			ExpectedCode: http.StatusBadRequest,
-			ExpectedData: "priority",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+				ExpectedData: "priority",
+			},
 		},
 		// Empty name data
 		{
@@ -139,8 +142,10 @@ func TestTodoCreate(t *testing.T) {
 				Name:     "",
 				Priority: "high",
 			},
-			ExpectedCode: http.StatusBadRequest,
-			ExpectedData: "name",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+				ExpectedData: "name",
+			},
 		},
 		// Wrong Priority data
 		{
@@ -148,8 +153,10 @@ func TestTodoCreate(t *testing.T) {
 				Name:     "Create todo ok",
 				Priority: "don't know",
 			},
-			ExpectedCode: http.StatusBadRequest,
-			ExpectedData: "priority",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+				ExpectedData: "priority",
+			},
 		},
 	}
 
@@ -165,10 +172,10 @@ func TestTodoCreate(t *testing.T) {
 
 		// Assertions
 		if assert.NoError(t, todoController.Create(c)) {
-			assert.Equal(t, v.ExpectedCode, rec.Code)
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 			// Test for checking content data
-			if len(v.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.ExpectedData))
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
 			}
 		}
 	}
@@ -178,7 +185,7 @@ func TestTodoCreate(t *testing.T) {
 // Find All
 func TestTodoFindAll(t *testing.T) {
 	// Setup authentification controller
-	todoController, _ := setUpTodoTestRouterController()
+	todoController, db := setUpTodoTestRouterController()
 
 	// Create test case
 	f := make(url.Values)
@@ -188,25 +195,31 @@ func TestTodoFindAll(t *testing.T) {
 		**/
 		// Get without request parameter
 		{
-			Req:          web.RequestParameterTodo{},
-			ExpectedCode: http.StatusOK,
+			Req: web.RequestParameterTodo{},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
 		},
 		// Get with request parameter status
 		{
 			Req: web.RequestParameterTodo{
 				Status: 1,
 			},
-			ExpectedCode:    http.StatusOK,
-			ExpectedData:    "\"status\":1",
-			NotExpectedData: "\"status\":0",
+			Exp: ExpectationResultTest{
+				ExpectedCode:    http.StatusOK,
+				ExpectedData:    "\"status\":1",
+				NotExpectedData: "\"status\":0",
+			},
 		},
 		{
 			Req: web.RequestParameterTodo{
 				Status: 0,
 			},
-			ExpectedCode:    http.StatusOK,
-			ExpectedData:    "\"status\":0",
-			NotExpectedData: "\"status\":1",
+			Exp: ExpectationResultTest{
+				ExpectedCode:    http.StatusOK,
+				ExpectedData:    "\"status\":0",
+				NotExpectedData: "\"status\":1",
+			},
 		},
 		// Get with request parameter keyowrd
 		// Keyword found on sample
@@ -214,15 +227,19 @@ func TestTodoFindAll(t *testing.T) {
 			Req: web.RequestParameterTodo{
 				Keyword: "Sample",
 			},
-			ExpectedCode: http.StatusOK,
-			ExpectedData: "Sample",
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+				ExpectedData: "Sample",
+			},
 		},
 		// Keyword not found on sample
 		{
 			Req: web.RequestParameterTodo{
 				Keyword: "This data not available on data sample",
 			},
-			ExpectedCode: http.StatusNotFound,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
 		},
 	}
 
@@ -238,34 +255,264 @@ func TestTodoFindAll(t *testing.T) {
 
 		// Assertions
 		if assert.NoError(t, todoController.FindAll(c)) {
-			assert.Equal(t, v.ExpectedCode, rec.Code)
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.ExpectedData))
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
 			}
 
 			// Check Not expected data
-			if len(v.NotExpectedData) > 0 {
-				assert.Equal(t, false, strings.Contains(rec.Body.String(), v.NotExpectedData))
+			if len(v.Exp.NotExpectedData) > 0 {
+				assert.Equal(t, false, strings.Contains(rec.Body.String(), v.Exp.NotExpectedData))
+			}
+		}
+	}
+
+	/**
+	*	Test if data not found or empty data
+	**/
+	// Clear all the data first
+	clearTodosData(db)
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/?"+f.Encode(), nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	// Assertions
+	if assert.NoError(t, todoController.FindAll(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+	}
+}
+
+// Find By Id
+func TestTodoFindById(t *testing.T) {
+	// Setup authentification controller
+	todoController, _ := setUpTodoTestRouterController()
+
+	// Create table test case
+	var testCase = []TestCaseRequestId{
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+				ExpectedData: "Sample", // Check sample data is exist
+			},
+		},
+		{
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
+		},
+	}
+
+	for _, v := range testCase {
+		e := echo.New()
+
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/todo/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(strconv.Itoa(v.ReqId))
+
+		// Assertions
+		if assert.NoError(t, todoController.FindById(c)) {
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
+
+			// Check expected data
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
 			}
 		}
 	}
 
 }
 
-// Find By Id
-func TestTodoFindById(t *testing.T) {
-}
-
 // Update
 func TestTodoUpdate(t *testing.T) {
+	// Setup authentification controller
+	todoController, _ := setUpTodoTestRouterController()
+
+	// Create table test
+	f := make(url.Values)
+	var testCase = []TestCaseRequestIdUpdateTodo{
+		// Success update
+		{
+			ReqId: 1,
+			ReqData: model.Todo{
+				Name:     "Updated todo",
+				Priority: "high",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+				ExpectedData: "Updated todo",
+			},
+		},
+		// Failed update
+		{
+			ReqId: 1,
+			ReqData: model.Todo{
+				Name:     "Updated todo",
+				Priority: "None",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+				ExpectedData: "priority",
+			},
+		},
+		{
+			ReqId: 1,
+			ReqData: model.Todo{
+				Name:     "Updated todo",
+				Priority: "Unknown Priority",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+				ExpectedData: "priority",
+			},
+		},
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+			},
+		},
+		{
+			ReqData: model.Todo{
+				Name:     "Updated todo",
+				Priority: "high",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		f.Set("name", v.ReqData.Name)
+		f.Set("priority", v.ReqData.Priority)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/todo/:id/")
+		c.SetParamNames("id")
+		c.SetParamValues(strconv.Itoa(v.ReqId))
+
+		// Assertions
+		if assert.NoError(t, todoController.Update(c)) {
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
+
+			// Check expected data
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			}
+		}
+	}
+
 }
 
 // Delete
 func TestTodoDelete(t *testing.T) {
+	// Setup authentification controller
+	todoController, _ := setUpTodoTestRouterController()
+
+	// Create table test case
+	var testCase = []TestCaseRequestId{
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
+		},
+		{
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
+		},
+	}
+
+	for _, v := range testCase {
+		e := echo.New()
+
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/todo/:id")
+		c.SetParamNames("id")
+		c.SetParamValues(strconv.Itoa(v.ReqId))
+
+		// Assertions
+		if assert.NoError(t, todoController.Delete(c)) {
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
+
+			// Check expected data
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			}
+		}
+	}
+
 }
 
 // Reverse Status
 func TestTodoReverseStatus(t *testing.T) {
+	// Setup authentification controller
+	todoController, _ := setUpTodoTestRouterController()
+
+	// Create table test case
+	var testCase = []TestCaseRequestId{
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+				ExpectedData: "\"status\":1",
+			},
+		},
+		{
+			ReqId: 1,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+				ExpectedData: "\"status\":0",
+			},
+		},
+		{
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusNotFound,
+			},
+		},
+	}
+
+	for _, v := range testCase {
+		e := echo.New()
+
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/todo/:id/reverse-status")
+		c.SetParamNames("id")
+		c.SetParamValues(strconv.Itoa(v.ReqId))
+
+		// Assertions
+		if assert.NoError(t, todoController.ReverseStatus(c)) {
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
+
+			// Check expected data
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			}
+		}
+	}
+
 }

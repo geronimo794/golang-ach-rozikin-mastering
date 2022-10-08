@@ -24,3 +24,9 @@ func NewDatabaseTest() *gorm.DB {
 func migrateTable(db *gorm.DB) {
 	db.AutoMigrate(&model.Todo{})
 }
+
+type ExpectationResultTest struct {
+	ExpectedCode    int
+	ExpectedData    string
+	NotExpectedData string
+}

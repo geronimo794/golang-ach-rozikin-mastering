@@ -25,9 +25,8 @@ func setUpTestAuthController() controller.AuthController {
 }
 
 type TestCaseAuth struct {
-	Req          web.RequestAuth
-	ExpectedCode int
-	ExpectedData string
+	Req web.RequestAuth
+	Exp ExpectationResultTest
 }
 
 func TestAuth(t *testing.T) {
@@ -37,31 +36,44 @@ func TestAuth(t *testing.T) {
 	// Setup table test
 	f := make(url.Values)
 	var testCase = []TestCaseAuth{
-		// Username password success
-		{Req: web.RequestAuth{
-			Username: "admin",
-			Password: "admin",
+		{
+			// Username password success
+			Req: web.RequestAuth{
+				Username: "admin",
+				Password: "admin",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusCreated,
+				ExpectedData: "\"token\":\"",
+			},
 		},
-			ExpectedCode: http.StatusCreated,
-			ExpectedData: "\"token\":\""},
-		// Username password wrong
-		{Req: web.RequestAuth{
-			Username: "salah",
-			Password: "salah",
+		{
+			// Username password wrong
+			Req: web.RequestAuth{
+				Username: "salah",
+				Password: "salah",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnauthorized,
+			},
 		},
-			ExpectedCode: http.StatusUnauthorized},
-		// Empty username and password
-		{Req: web.RequestAuth{
-			Username: "",
-			Password: "",
+		{
+			// Empty username and password
+			Req: web.RequestAuth{
+				Username: "",
+				Password: "",
+			},
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusBadRequest,
+			},
 		},
-			ExpectedCode: http.StatusBadRequest},
 	}
 
 	// Doing test with table test
 	for _, v := range testCase {
 		f.Set("username", v.Req.Username)
 		f.Set("password", v.Req.Password)
+
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(f.Encode()))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)
@@ -70,10 +82,10 @@ func TestAuth(t *testing.T) {
 
 		// Assertions
 		if assert.NoError(t, authController.Authenticate(c)) {
-			assert.Equal(t, v.ExpectedCode, rec.Code)
+			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 			// Test for checking content data
-			if len(v.ExpectedData) > 0 {
-				assert.Equal(t, strings.Contains(rec.Body.String(), v.ExpectedData), true)
+			if len(v.Exp.ExpectedData) > 0 {
+				assert.Equal(t, strings.Contains(rec.Body.String(), v.Exp.ExpectedData), true)
 			}
 		}
 	}
