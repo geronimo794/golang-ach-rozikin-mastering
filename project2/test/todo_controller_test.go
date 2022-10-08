@@ -1,22 +1,35 @@
 package test
 
 import (
-	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/app"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/controller"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model/web"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/repository"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/service"
 	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 )
 
 func setUpTodoTestRouterController() controller.TodoController {
 	validate := validator.New()
-	db := app.NewDatabaseTest()
+	db := NewDatabaseTest()
 
 	// Auth API
 	todoRepository := repository.NewTodoRepository()
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
 	return todoController
+}
+func setUpDatabaseTest(db *gorm.DB, todoService service.TodoService) {
+	// Truncate table
+	db.Exec("TRUNCATE TABLE users")
+
+	// Create single todo data
+	todoData := web.RequestTodo{
+		Name:     "Example content todo data",
+		Priority: "high",
+	}
+	todoService.Create(db.Statement.Context, todoData)
+
 }
 
 // type fields struct {

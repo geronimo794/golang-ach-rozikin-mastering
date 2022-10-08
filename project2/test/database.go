@@ -1,4 +1,4 @@
-package app
+package test
 
 import (
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project2/model"
@@ -6,8 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewDatabase() *gorm.DB {
-	dsn := "root:menjadilebihbaik@tcp(127.0.0.1:3306)/todo_project_golang?charset=utf8mb4&parseTime=True&loc=Local"
+func NewDatabaseTest() *gorm.DB {
+	dsn := "root:menjadilebihbaik@tcp(127.0.0.1:3306)/todo_project_golang_test?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
