@@ -22,7 +22,7 @@ func NewAuthController(authService service.AuthService, validate *validator.Vali
 	}
 }
 
-func (controller *AuthControllerImpl) Login(e echo.Context) error {
+func (controller *AuthControllerImpl) Authenticate(e echo.Context) error {
 	// Gather the form data
 	request_data := web.RequestAuth{}
 	e.Bind(&request_data)

@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setUpTestLoginController() controller.AuthController {
+func setUpTestAuthController() controller.AuthController {
 	validate := validator.New()
 
 	// Auth Controller
@@ -24,19 +24,19 @@ func setUpTestLoginController() controller.AuthController {
 	return authController
 }
 
-type TestCaseLogin struct {
+type TestCaseAuth struct {
 	Req          web.RequestAuth
 	ExpectedCode int
 	ExpectedData string
 }
 
-func TestLogin(t *testing.T) {
+func TestAuth(t *testing.T) {
 	// Setup authentification controller
-	authController := setUpTestLoginController()
+	authController := setUpTestAuthController()
 
-	// Table test
+	// Setup table test
 	f := make(url.Values)
-	var testCase = []TestCaseLogin{
+	var testCase = []TestCaseAuth{
 		// Username password success
 		{Req: web.RequestAuth{
 			Username: "admin",
@@ -58,6 +58,7 @@ func TestLogin(t *testing.T) {
 			ExpectedCode: http.StatusBadRequest},
 	}
 
+	// Doing test with table test
 	for _, v := range testCase {
 		f.Set("username", v.Req.Username)
 		f.Set("password", v.Req.Password)
@@ -68,7 +69,7 @@ func TestLogin(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// Assertions
-		if assert.NoError(t, authController.Login(c)) {
+		if assert.NoError(t, authController.Authenticate(c)) {
 			assert.Equal(t, v.ExpectedCode, rec.Code)
 			// Test for checking content data
 			if len(v.ExpectedData) > 0 {

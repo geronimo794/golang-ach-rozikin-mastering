@@ -5,5 +5,5 @@ import (
 )
 
 type AuthController interface {
-	Login(echo.Context) error
+	Authenticate(echo.Context) error
 }

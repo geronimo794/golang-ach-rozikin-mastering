@@ -19,7 +19,7 @@ func SetAuthJWTGroup(e *echo.Echo) *echo.Group {
 }
 
 func SetRouterAuth(e *echo.Echo, authController controller.AuthController) {
-	e.POST("/login", authController.Login)
+	e.POST("/login", authController.Authenticate)
 }
 
 func SetRouterTodo(e *echo.Group, todoController controller.TodoController) {

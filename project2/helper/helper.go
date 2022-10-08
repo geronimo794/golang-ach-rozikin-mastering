@@ -57,7 +57,7 @@ func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []w
 	var message string
 	for _, err := range validatorError.(validator.ValidationErrors) {
 		message = strings.Trim("is "+err.ActualTag()+" "+err.Param(), " ")
-		sliceErrorResponse = append(sliceErrorResponse, CreateErrorResponse(err.Field(), message))
+		sliceErrorResponse = append(sliceErrorResponse, CreateErrorResponse(strings.ToLower(err.Field()), message))
 	}
 	return sliceErrorResponse
 }
