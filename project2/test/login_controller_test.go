@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setUpAuthTestRouterController() controller.AuthController {
+func setUpTestLoginController() controller.AuthController {
 	validate := validator.New()
 
 	// Auth Controller
@@ -32,7 +32,7 @@ type TestCaseLogin struct {
 
 func TestLogin(t *testing.T) {
 	// Setup authentification controller
-	authController := setUpAuthTestRouterController()
+	authController := setUpTestLoginController()
 
 	// Table test
 	f := make(url.Values)
