@@ -1,43 +1,34 @@
 package service
 
-import (
-	"errors"
-	"fmt"
-	"math/rand"
+// type TodoService struct{}
 
-	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/database"
-	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/model"
-)
+// func (t *TodoService) FindAll() []*model.Todo {
+// 	todos := []*model.Todo{}
 
-type TodoService struct{}
+// 	database.DB.Find(&todos)
 
-func (t *TodoService) FindAll() []*model.Todo {
-	todos := []*model.Todo{}
+// 	return todos
+// }
 
-	database.DB.Find(&todos)
+// func (t *TodoService) FindById(id string) (*model.Todo, error) {
+// 	todo := model.Todo{}
 
-	return todos
-}
+// 	result := database.DB.First(&todo, "id = ?", id)
 
-func (t *TodoService) FindById(id string) (*model.Todo, error) {
-	todo := model.Todo{}
+// 	if result.RowsAffected == 0 {
+// 		return &todo, errors.New("todo not found")
+// 	}
+// 	return &todo, nil
+// }
 
-	result := database.DB.First(&todo, "id = ?", id)
+// func (t *TodoService) Create(input model.TodoInput) model.Todo {
+// 	var newTodo = model.Todo{
+// 		ID:       fmt.Sprintf("%d", rand.Int()),
+// 		Name:     input.Name,
+// 		Priority: input.Priority,
+// 		Status:   0,
+// 	}
+// 	database.DB.Create(&newTodo)
 
-	if result.RowsAffected == 0 {
-		return &todo, errors.New("todo not found")
-	}
-	return &todo, nil
-}
-
-func (t *TodoService) Create(input model.TodoInput) model.Todo {
-	var newTodo = model.Todo{
-		ID:       fmt.Sprintf("%d", rand.Int()),
-		Name:     input.Name,
-		Priority: input.Priority,
-		Status:   0,
-	}
-	database.DB.Create(&newTodo)
-
-	return newTodo
-}
+// 	return newTodo
+// }

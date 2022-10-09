@@ -12,19 +12,19 @@ import (
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input *model.TodoInput) (*model.Todo, error) {
-	var todo = r.todoService.Create(*input)
-	return &todo, nil
+	// var todo = r.todoService.Create(*input)
+	return &model.Todo{}, nil
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) (todos []*model.Todo, err error) {
-	todos = r.todoService.FindAll()
+	// todos = r.todoService.FindAll()
 	return todos, err
 }
 
 // Todo is the resolver for the todo field.
 func (r *queryResolver) Todo(ctx context.Context, id string) (todo *model.Todo, err error) {
-	todo, err = r.todoService.FindById(id)
+	// todo, err = r.todoService.FindById(ctx, id)
 	return todo, err
 }
 
