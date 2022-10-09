@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/helper"
@@ -27,10 +28,15 @@ func (repository TodoRepositoryImpl) FindAll(ctx context.Context, tx *gorm.DB, p
 		tx = tx.Where("name LIKE ?", "%"+param.Keyword+"%")
 	}
 
-	if param.Status != -1 {
-		tx = tx.Where("status = ?", param.Status)
+	findIsDone, err := strconv.ParseBool(param.IsDone)
+	if err == nil {
+		strFindIsDone := "0"
+		if findIsDone {
+			strFindIsDone = "1"
+		}
+		tx = tx.Where("is_done = ?", strFindIsDone)
 	}
-	err := tx.Find(&todos).Error
+	err = tx.Find(&todos).Error
 	helper.PanicIfError(err)
 	return todos
 }

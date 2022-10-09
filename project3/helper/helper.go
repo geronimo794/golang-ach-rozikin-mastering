@@ -61,3 +61,6 @@ func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []w
 	}
 	return sliceErrorResponse
 }
+func BoolPointer(b bool) *bool {
+	return &b
+}

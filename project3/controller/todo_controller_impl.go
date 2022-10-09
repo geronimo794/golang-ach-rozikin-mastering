@@ -46,12 +46,10 @@ func (controller *TodoControllerImpl) Create(e echo.Context) error {
 }
 func (controller *TodoControllerImpl) FindAll(e echo.Context) error {
 	// Gather the form data
-	request_data := web.RequestParameterTodo{
-		Status: -1,
-	}
+	request_data := web.RequestParameterTodo{}
 	echo.QueryParamsBinder(e).
 		String("keyword", &request_data.Keyword).
-		Int8("status", &request_data.Status)
+		String("is_done", &request_data.IsDone)
 
 	response_data := controller.TodoService.FindAll(e.Request().Context(), request_data)
 	if len(response_data) == 0 {

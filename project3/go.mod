@@ -9,6 +9,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/spf13/viper v1.13.0
 	github.com/steinfletcher/apitest v1.5.13
+	github.com/stretchr/testify v1.8.0
 	github.com/vektah/gqlparser/v2 v2.5.1
 	gorm.io/driver/mysql v1.4.1
 	gorm.io/gorm v1.24.0
@@ -34,6 +35,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

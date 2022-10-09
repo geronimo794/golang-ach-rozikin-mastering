@@ -2,5 +2,5 @@ package web
 
 type RequestParameterTodo struct {
 	Keyword string `json:"keyword" form:"keyword"`
-	Status  int8   `json:"status" form:"status" validate:"oneof=0 1"`
+	IsDone  string `json:"is_done" form:"is_done" validate:"oneof=true false"`
 }
