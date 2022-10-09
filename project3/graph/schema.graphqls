@@ -2,27 +2,44 @@
 #
 # https://gqlgen.com/getting-started/
 
+"""
+Todo Entity
+"""
+#########
+# Schema
+#########
 type Todo {
   id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
-}
-
-type User {
-  id: ID!
   name: String!
+  priority: TodoPriority!
+  status: Int!
+}
+# Enum priority
+enum TodoPriority {
+  low
+  medium
+  high
 }
 
-type Query {
-  todos: [Todo!]!
+#########
+# Query
+#########
+type Query{
+	todos: [Todo!]!
+	todo(id: ID!): Todo!
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+#########
+# Mutation
+#########
+# Mutation Input
+input TodoInput{
+	name: String!
+	priority: TodoPriority!
 }
-
+# Mutation
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+	createTodo(input: TodoInput): Todo
 }
+
+
