@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/generated"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/model"
@@ -24,8 +23,9 @@ func (r *queryResolver) Todos(ctx context.Context) (todos []*model.Todo, err err
 }
 
 // Todo is the resolver for the todo field.
-func (r *queryResolver) Todo(ctx context.Context, id string) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todo - todo"))
+func (r *queryResolver) Todo(ctx context.Context, id string) (todo *model.Todo, err error) {
+	todo, err = r.todoService.FindById(id)
+	return todo, err
 }
 
 // Mutation returns generated.MutationResolver implementation.

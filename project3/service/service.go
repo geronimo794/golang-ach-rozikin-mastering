@@ -19,15 +19,15 @@ func (t *TodoService) FindAll() []*model.Todo {
 	return todos
 }
 
-func (t *TodoService) FindById(id string) (model.Todo, error) {
+func (t *TodoService) FindById(id string) (*model.Todo, error) {
 	todo := model.Todo{}
 
 	result := database.DB.First(&todo, "id = ?", id)
 
 	if result.RowsAffected == 0 {
-		return todo, errors.New("todo not found")
+		return &todo, errors.New("todo not found")
 	}
-	return todo, nil
+	return &todo, nil
 }
 
 func (t *TodoService) Create(input model.TodoInput) model.Todo {
