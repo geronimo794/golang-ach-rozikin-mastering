@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/model"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -32,4 +33,6 @@ func Connect() {
 		panic(err)
 	}
 	log.Println("Success connected to the database")
+
+	DB.AutoMigrate(&model.Todo{})
 }
