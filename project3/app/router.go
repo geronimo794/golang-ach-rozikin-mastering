@@ -28,5 +28,5 @@ func SetRouterTodo(e *echo.Group, todoController controller.TodoController) {
 	e.GET("/todo/:id", todoController.FindById)
 	e.PUT("/todo/:id", todoController.Update)
 	e.DELETE("/todo/:id", todoController.Delete)
-	e.PUT("/todo/:id/reverse-status", todoController.ReverseStatus)
+	e.PUT("/todo/:id/reverse-is-done", todoController.ReverseIsDone)
 }

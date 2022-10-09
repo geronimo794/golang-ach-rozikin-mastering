@@ -29,8 +29,6 @@ func main() {
 	todoController := controller.NewTodoController(todoService, validate)
 	app.SetRouterTodo(eGroup, todoController)
 
-	// Set 
-
 	e.Use(middleware.Recover())
 	e.Start(":3000")
 }

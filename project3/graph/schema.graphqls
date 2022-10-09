@@ -12,7 +12,7 @@ type Todo {
   id: ID!
   name: String!
   priority: TodoPriority!
-  status: Int!
+  is_done: Boolean!
 }
 # Enum priority
 enum TodoPriority {
@@ -39,7 +39,10 @@ input TodoInput{
 }
 # Mutation
 type Mutation {
-	createTodo(input: TodoInpu!): Todo
+	createTodo(input: TodoInput!): Todo
+	updateTodo(id: ID!, input: TodoInput!): Todo
+	deleteTodo(id: ID!): Todo
+	reverseStatusTodo(id: ID!): Todo
 }
 
 

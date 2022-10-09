@@ -13,7 +13,7 @@ type Todo struct {
 	ID       string       `json:"id"`
 	Name     string       `json:"name"`
 	Priority TodoPriority `json:"priority"`
-	Status   int          `json:"status"`
+	IsDone   bool         `json:"is_done"`
 }
 
 type TodoInput struct {

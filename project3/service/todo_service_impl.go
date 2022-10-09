@@ -77,7 +77,7 @@ func (service *TodoServiceImpl) Delete(ctx context.Context, id int) model.Todo {
 
 	return db_todo
 }
-func (service *TodoServiceImpl) ReverseStatus(ctx context.Context, id int) model.Todo {
+func (service *TodoServiceImpl) ReverseIsDone(ctx context.Context, id int) model.Todo {
 	// Create transaction in this service
 	tx := helper.StartTransaction(service.DB)
 	defer helper.CommitOrRollback(tx)
@@ -88,12 +88,8 @@ func (service *TodoServiceImpl) ReverseStatus(ctx context.Context, id int) model
 		return db_todo
 	}
 
-	// Reverse the status
-	if db_todo.Status == 0 {
-		db_todo.Status = 1
-	} else {
-		db_todo.Status = 0
-	}
+	// Reverse the is done value
+	db_todo.IsDone = !db_todo.IsDone
 	db_todo = service.TodoRepository.Update(ctx, service.DB, db_todo)
 
 	return db_todo

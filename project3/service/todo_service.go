@@ -13,5 +13,5 @@ type TodoService interface {
 	FindById(ctx context.Context, id int) model.Todo
 	Update(ctx context.Context, todo model.Todo) model.Todo
 	Delete(ctx context.Context, id int) model.Todo
-	ReverseStatus(ctx context.Context, id int) model.Todo
+	ReverseIsDone(ctx context.Context, id int) model.Todo
 }
