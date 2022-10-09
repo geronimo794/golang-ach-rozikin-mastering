@@ -13,12 +13,14 @@ import (
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input *model.TodoInput) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+	var todo = r.todoService.Create(*input)
+	return &todo, nil
 }
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+func (r *queryResolver) Todos(ctx context.Context) (todos []*model.Todo, err error) {
+	todos = r.todoService.FindAll()
+	return todos, err
 }
 
 // Todo is the resolver for the todo field.

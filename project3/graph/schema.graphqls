@@ -39,7 +39,7 @@ input TodoInput{
 }
 # Mutation
 type Mutation {
-	createTodo(input: TodoInput): Todo
+	createTodo(input: TodoInpu!): Todo
 }
 
 

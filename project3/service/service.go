@@ -11,8 +11,8 @@ import (
 
 type TodoService struct{}
 
-func (t *TodoService) FindAll() []model.Todo {
-	todos := []model.Todo{}
+func (t *TodoService) FindAll() []*model.Todo {
+	todos := []*model.Todo{}
 
 	database.DB.Find(&todos)
 
