@@ -3,8 +3,12 @@ package helper
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 
+	gModel "github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/model"
+
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model/web"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -63,4 +67,12 @@ func CreateValidationErrorResponse(validatorError error) (sliceErrorResponse []w
 }
 func BoolPointer(b bool) *bool {
 	return &b
+}
+func ConvertTodoToGraphTodo(todo *model.Todo) (gTodo *gModel.Todo) {
+	return &gModel.Todo{
+		ID:       strconv.Itoa(todo.Id),
+		Name:     todo.Name,
+		Priority: gModel.TodoPriority(todo.Priority),
+		IsDone:   todo.IsDone,
+	}
 }

@@ -6,4 +6,4 @@ import "github.com/geronimo794/golang-ach-rozikin-mastering/project3/service"
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type Resolver struct{ todoService *service.TodoServiceImpl }
+type Resolver struct{ TodoService service.TodoService }

@@ -1,8 +1,11 @@
 package main
 
 import (
+	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/app"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/controller"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/generated"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/repository"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/service"
 	"github.com/go-playground/validator/v10"
@@ -29,6 +32,8 @@ func main() {
 	todoController := controller.NewTodoController(todoService, validate)
 	app.SetRouterTodo(eGroup, todoController)
 
+	// srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{TodoService: todoService}}))
+
 	e.Use(middleware.Recover())
 	e.Start(":3000")
 }
@@ -43,7 +48,7 @@ func main() {
 // 		port = defaultPort
 // 	}
 
-// 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+// srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
 // 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 // 	http.Handle("/query", srv)
