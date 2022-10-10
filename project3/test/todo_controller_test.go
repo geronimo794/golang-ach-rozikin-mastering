@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/controller"
-	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model/web"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/repository"
@@ -28,38 +27,10 @@ func setUpTodoTestRouterController() (controller.TodoController, *gorm.DB) {
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
 
-	clearTodosData(db)
-	createSampleTodoData(db, todoRepository)
+	ClearTodosData(db)
+	CreateSampleTodoData(db, todoRepository)
 
 	return todoController, db
-}
-func createSampleTodoData(db *gorm.DB, todoRepository repository.TodoRepository) {
-	todoData := model.Todo{
-		Name:     "Sample data low",
-		Priority: "low",
-		IsDone:   false,
-	}
-	todoRepository.Create(db.Statement.Context, db, todoData)
-
-	todoData = model.Todo{
-		Name:     "Sample data medium",
-		Priority: "medium",
-		IsDone:   false,
-	}
-	todoRepository.Create(db.Statement.Context, db, todoData)
-
-	todoData = model.Todo{
-		Name:     "Sample data high",
-		Priority: "high",
-		IsDone:   true,
-	}
-	todoRepository.Create(db.Statement.Context, db, todoData)
-
-}
-func clearTodosData(db *gorm.DB) {
-	// Truncate table
-	err := db.Exec("TRUNCATE TABLE todos").Error
-	helper.PanicIfError(err)
 }
 
 // Struct test case
@@ -274,7 +245,7 @@ func TestTodoFindAll(t *testing.T) {
 	*	Test if data not found or empty data
 	**/
 	// Clear all the data first
-	clearTodosData(db)
+	ClearTodosData(db)
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/?"+f.Encode(), nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationForm)

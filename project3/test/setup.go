@@ -1,7 +1,9 @@
 package test
 
 import (
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/helper"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/repository"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -23,6 +25,38 @@ func NewDatabaseTest() *gorm.DB {
 
 func migrateTable(db *gorm.DB) {
 	db.AutoMigrate(&model.Todo{})
+}
+
+/**
+* To do data set
+**/
+func CreateSampleTodoData(db *gorm.DB, todoRepository repository.TodoRepository) {
+	todoData := model.Todo{
+		Name:     "Sample data low",
+		Priority: "low",
+		IsDone:   false,
+	}
+	todoRepository.Create(db.Statement.Context, db, todoData)
+
+	todoData = model.Todo{
+		Name:     "Sample data medium",
+		Priority: "medium",
+		IsDone:   false,
+	}
+	todoRepository.Create(db.Statement.Context, db, todoData)
+
+	todoData = model.Todo{
+		Name:     "Sample data high",
+		Priority: "high",
+		IsDone:   true,
+	}
+	todoRepository.Create(db.Statement.Context, db, todoData)
+
+}
+func ClearTodosData(db *gorm.DB) {
+	// Truncate table
+	err := db.Exec("TRUNCATE TABLE todos").Error
+	helper.PanicIfError(err)
 }
 
 type ExpectationResultTest struct {
