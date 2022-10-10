@@ -76,3 +76,21 @@ func ConvertTodoToGraphTodo(todo *model.Todo) (gTodo *gModel.Todo) {
 		IsDone:   todo.IsDone,
 	}
 }
+func ConvertListTodoToGraphTodo(todo *[]model.Todo) (gTodo []*gModel.Todo) {
+	for _, v := range *todo {
+		gTodo = append(gTodo, &gModel.Todo{
+			ID:       strconv.Itoa(v.Id),
+			Name:     v.Name,
+			Priority: gModel.TodoPriority(v.Priority),
+			IsDone:   v.IsDone,
+		})
+	}
+
+	return gTodo
+	// return &gModel.Todo{
+	// 	ID:       strconv.Itoa(todo.Id),
+	// 	Name:     todo.Name,
+	// 	Priority: gModel.TodoPriority(todo.Priority),
+	// 	IsDone:   todo.IsDone,
+	// }
+}

@@ -18,15 +18,33 @@ func SetAuthJWTGroup(e *echo.Echo) *echo.Group {
 	return eJWT
 }
 
+/**
+* Rest API Router
+**/
+// NO auth
 func SetRouterAuth(e *echo.Echo, authController controller.AuthController) {
 	e.POST("/login", authController.Authenticate)
 }
 
-func SetRouterTodo(e *echo.Group, todoController controller.TodoController) {
+// NEED auth
+func SetGroupRouterTodo(e *echo.Group, todoController controller.TodoController) {
 	e.POST("/todo", todoController.Create)
 	e.GET("/todo", todoController.FindAll)
 	e.GET("/todo/:id", todoController.FindById)
 	e.PUT("/todo/:id", todoController.Update)
 	e.DELETE("/todo/:id", todoController.Delete)
 	e.PUT("/todo/:id/reverse-is-done", todoController.ReverseIsDone)
+}
+
+/**
+* GraphQL Router
+**/
+// NO auth
+func SetRouterGraphQLPlayGround(e *echo.Echo, graphController controller.GraphController) {
+	e.GET("/gql_play", graphController.PlayGround)
+}
+
+// NEED auth
+func SetGroupRouterGraphQLQuery(e *echo.Group, graphController controller.GraphController) {
+	e.POST("/gql_query", graphController.Query)
 }

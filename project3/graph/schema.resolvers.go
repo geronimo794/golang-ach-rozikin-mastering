@@ -5,11 +5,12 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	"strconv"
 
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/generated"
 	gModel "github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph/model"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/helper"
+	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/model/web"
 )
 
@@ -19,36 +20,65 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input gModel.TodoInpu
 		Name:     input.Name,
 		Priority: string(input.Priority),
 	}
-	newData := r.todoService.Create(ctx, requestData)
+	newData := r.TodoService.Create(ctx, requestData)
 	// var todo = r.todoService.Create(*input)
 	return helper.ConvertTodoToGraphTodo(&newData), nil
 }
 
 // UpdateTodo is the resolver for the updateTodo field.
 func (r *mutationResolver) UpdateTodo(ctx context.Context, id string, input gModel.TodoInput) (*gModel.Todo, error) {
-	panic(fmt.Errorf("not implemented: UpdateTodo - updateTodo"))
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+
+	editData := r.TodoService.Update(ctx, model.Todo{
+		Id:       intId,
+		Name:     input.Name,
+		Priority: string(input.Priority),
+	})
+	// var todo = r.todoService.Create(*input)
+	return helper.ConvertTodoToGraphTodo(&editData), nil
 }
 
 // DeleteTodo is the resolver for the deleteTodo field.
 func (r *mutationResolver) DeleteTodo(ctx context.Context, id string) (*gModel.Todo, error) {
-	panic(fmt.Errorf("not implemented: DeleteTodo - deleteTodo"))
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	deleteData := r.TodoService.Delete(ctx, intId)
+
+	return helper.ConvertTodoToGraphTodo(&deleteData), nil
 }
 
 // ReverseStatusTodo is the resolver for the reverseStatusTodo field.
 func (r *mutationResolver) ReverseStatusTodo(ctx context.Context, id string) (*gModel.Todo, error) {
-	panic(fmt.Errorf("not implemented: ReverseStatusTodo - reverseStatusTodo"))
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	deleteData := r.TodoService.ReverseIsDone(ctx, intId)
+
+	return helper.ConvertTodoToGraphTodo(&deleteData), nil
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*gModel.Todo, error) {
-	// todos = r.todoService.FindAll()
-	panic(fmt.Errorf("not implemented: ReverseStatusTodo - reverseStatusTodo"))
+	todo := r.TodoService.FindAll(ctx, web.RequestParameterTodo{})
+
+	return helper.ConvertListTodoToGraphTodo(&todo), nil
 }
 
 // Todo is the resolver for the todo field.
 func (r *queryResolver) Todo(ctx context.Context, id string) (*gModel.Todo, error) {
-	// todo, err = r.todoService.FindById(ctx, id)
-	panic(fmt.Errorf("not implemented: ReverseStatusTodo - reverseStatusTodo"))
+	intId, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	todoData := r.TodoService.FindById(ctx, intId)
+
+	return helper.ConvertTodoToGraphTodo(&todoData), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

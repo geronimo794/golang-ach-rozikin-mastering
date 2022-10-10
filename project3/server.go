@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/app"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/controller"
 	"github.com/geronimo794/golang-ach-rozikin-mastering/project3/graph"
@@ -17,7 +18,9 @@ func main() {
 	db := app.NewDatabase()
 	e := echo.New()
 	validate := validator.New()
-
+	/**
+	* RestAPI Generation
+	**/
 	// Auth API
 	authService := service.NewAuthService()
 	authController := controller.NewAuthController(authService, validate)
@@ -30,9 +33,20 @@ func main() {
 	todoRepository := repository.NewTodoRepository()
 	todoService := service.NewTodoService(todoRepository, db, validate)
 	todoController := controller.NewTodoController(todoService, validate)
-	app.SetRouterTodo(eGroup, todoController)
+	app.SetGroupRouterTodo(eGroup, todoController)
 
-	// srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{TodoService: todoService}}))
+	/**
+	* GraphQL Generation
+	**/
+	// Create handler function
+	playgroundHandler := playground.Handler("GraphQL Todo", "/gql_query")
+	queryHandler := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{TodoService: todoService}}))
+
+	// Create controller graphql
+	graphController := controller.NewGraphController(playgroundHandler, queryHandler)
+	// Set playground controller
+	app.SetRouterGraphQLPlayGround(e, graphController)
+	app.SetGroupRouterGraphQLQuery(eGroup, graphController)
 
 	e.Use(middleware.Recover())
 	e.Start(":3000")
@@ -56,3 +70,12 @@ func main() {
 // 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 // 	log.Fatal(http.ListenAndServe(":"+port, nil))
 // }
+// e.POST("/query", func(c echo.Context) error {
+// 	graphqlHandler.ServeHTTP(c.Response(), c.Request())
+// 	return nil
+// })
+
+// e.GET("/playground", func(c echo.Context) error {
+// 	playgroundHandler.ServeHTTP(c.Response(), c.Request())
+// 	return nil
+// })
