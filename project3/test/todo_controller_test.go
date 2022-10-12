@@ -71,8 +71,8 @@ func TestTodoCreate(t *testing.T) {
 				Priority: "high",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusCreated,
-				ExpectedData: "Create todo success",
+				ExpectedCode:        http.StatusCreated,
+				ExpectedContainData: "Create todo success",
 			},
 		},
 		// Check priority data
@@ -82,8 +82,8 @@ func TestTodoCreate(t *testing.T) {
 				Priority: "low",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusCreated,
-				ExpectedData: "low",
+				ExpectedCode:        http.StatusCreated,
+				ExpectedContainData: "low",
 			},
 		},
 		/**
@@ -103,8 +103,8 @@ func TestTodoCreate(t *testing.T) {
 				Priority: "",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusBadRequest,
-				ExpectedData: "priority",
+				ExpectedCode:        http.StatusBadRequest,
+				ExpectedContainData: "priority",
 			},
 		},
 		// Empty name data
@@ -114,8 +114,8 @@ func TestTodoCreate(t *testing.T) {
 				Priority: "high",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusBadRequest,
-				ExpectedData: "name",
+				ExpectedCode:        http.StatusBadRequest,
+				ExpectedContainData: "name",
 			},
 		},
 		// Wrong Priority data
@@ -125,8 +125,8 @@ func TestTodoCreate(t *testing.T) {
 				Priority: "don't know",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusBadRequest,
-				ExpectedData: "priority",
+				ExpectedCode:        http.StatusBadRequest,
+				ExpectedContainData: "priority",
 			},
 		},
 	}
@@ -145,8 +145,8 @@ func TestTodoCreate(t *testing.T) {
 		if assert.NoError(t, todoController.Create(c)) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 			// Test for checking content data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedContainData))
 			}
 		}
 	}
@@ -177,9 +177,9 @@ func TestTodoFindAll(t *testing.T) {
 				IsDone: "true",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode:    http.StatusOK,
-				ExpectedData:    `"is_done":true`,
-				NotExpectedData: `"is_done":false`,
+				ExpectedCode:           http.StatusOK,
+				ExpectedContainData:    `"is_done":true`,
+				NotExpectedContainData: `"is_done":false`,
 			},
 		},
 		{
@@ -187,9 +187,9 @@ func TestTodoFindAll(t *testing.T) {
 				IsDone: "false",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode:    http.StatusOK,
-				ExpectedData:    `"is_done":false`,
-				NotExpectedData: `"is_done":true`,
+				ExpectedCode:           http.StatusOK,
+				ExpectedContainData:    `"is_done":false`,
+				NotExpectedContainData: `"is_done":true`,
 			},
 		},
 		// Get with request parameter keyowrd
@@ -199,8 +199,8 @@ func TestTodoFindAll(t *testing.T) {
 				Keyword: "Sample",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusOK,
-				ExpectedData: "Sample",
+				ExpectedCode:        http.StatusOK,
+				ExpectedContainData: "Sample",
 			},
 		},
 		// Keyword not found on sample
@@ -230,13 +230,13 @@ func TestTodoFindAll(t *testing.T) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Contains(t, rec.Body.String(), v.Exp.ExpectedData)
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Contains(t, rec.Body.String(), v.Exp.ExpectedContainData)
 			}
 
 			// Check Not expected data
-			if len(v.Exp.NotExpectedData) > 0 {
-				assert.NotContains(t, rec.Body.String(), v.Exp.NotExpectedData)
+			if len(v.Exp.NotExpectedContainData) > 0 {
+				assert.NotContains(t, rec.Body.String(), v.Exp.NotExpectedContainData)
 			}
 		}
 	}
@@ -268,8 +268,8 @@ func TestTodoFindById(t *testing.T) {
 		{
 			ReqId: 1,
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusOK,
-				ExpectedData: "Sample", // Check sample data is exist
+				ExpectedCode:        http.StatusOK,
+				ExpectedContainData: "Sample", // Check sample data is exist
 			},
 		},
 		{
@@ -294,8 +294,8 @@ func TestTodoFindById(t *testing.T) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedContainData))
 			}
 		}
 	}
@@ -318,8 +318,8 @@ func TestTodoUpdate(t *testing.T) {
 				Priority: "high",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusOK,
-				ExpectedData: "Updated todo",
+				ExpectedCode:        http.StatusOK,
+				ExpectedContainData: "Updated todo",
 			},
 		},
 		// Failed update
@@ -330,8 +330,8 @@ func TestTodoUpdate(t *testing.T) {
 				Priority: "None",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusBadRequest,
-				ExpectedData: "priority",
+				ExpectedCode:        http.StatusBadRequest,
+				ExpectedContainData: "priority",
 			},
 		},
 		{
@@ -341,8 +341,8 @@ func TestTodoUpdate(t *testing.T) {
 				Priority: "Unknown Priority",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusBadRequest,
-				ExpectedData: "priority",
+				ExpectedCode:        http.StatusBadRequest,
+				ExpectedContainData: "priority",
 			},
 		},
 		{
@@ -381,8 +381,8 @@ func TestTodoUpdate(t *testing.T) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedContainData))
 			}
 		}
 	}
@@ -430,8 +430,8 @@ func TestTodoDelete(t *testing.T) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedData))
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Equal(t, true, strings.Contains(rec.Body.String(), v.Exp.ExpectedContainData))
 			}
 		}
 	}
@@ -448,15 +448,15 @@ func TestTodoReverseIsDone(t *testing.T) {
 		{
 			ReqId: 1,
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusOK,
-				ExpectedData: `"is_done":true`,
+				ExpectedCode:        http.StatusOK,
+				ExpectedContainData: `"is_done":true`,
 			},
 		},
 		{
 			ReqId: 1,
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusOK,
-				ExpectedData: `"is_done":false`,
+				ExpectedCode:        http.StatusOK,
+				ExpectedContainData: `"is_done":false`,
 			},
 		},
 		{
@@ -481,8 +481,8 @@ func TestTodoReverseIsDone(t *testing.T) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 
 			// Check expected data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Contains(t, rec.Body.String(), v.Exp.ExpectedData)
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Contains(t, rec.Body.String(), v.Exp.ExpectedContainData)
 			}
 		}
 	}

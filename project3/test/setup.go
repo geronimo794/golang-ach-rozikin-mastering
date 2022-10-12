@@ -60,7 +60,7 @@ func ClearTodosData(db *gorm.DB) {
 }
 
 type ExpectationResultTest struct {
-	ExpectedCode    int
-	ExpectedData    string
-	NotExpectedData string
+	ExpectedCode           int
+	ExpectedContainData    string
+	NotExpectedContainData string
 }

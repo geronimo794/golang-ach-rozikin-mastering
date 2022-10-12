@@ -43,8 +43,8 @@ func TestAuth(t *testing.T) {
 				Password: "admin",
 			},
 			Exp: ExpectationResultTest{
-				ExpectedCode: http.StatusCreated,
-				ExpectedData: "\"token\":\"",
+				ExpectedCode:        http.StatusCreated,
+				ExpectedContainData: "\"token\":\"",
 			},
 		},
 		{
@@ -84,8 +84,8 @@ func TestAuth(t *testing.T) {
 		if assert.NoError(t, authController.Authenticate(c)) {
 			assert.Equal(t, v.Exp.ExpectedCode, rec.Code)
 			// Test for checking content data
-			if len(v.Exp.ExpectedData) > 0 {
-				assert.Equal(t, strings.Contains(rec.Body.String(), v.Exp.ExpectedData), true)
+			if len(v.Exp.ExpectedContainData) > 0 {
+				assert.Equal(t, strings.Contains(rec.Body.String(), v.Exp.ExpectedContainData), true)
 			}
 		}
 	}
