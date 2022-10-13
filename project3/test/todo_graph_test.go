@@ -357,8 +357,274 @@ func TestCreateTodo_Success(t *testing.T) {
 }
 
 // updateTodo : Failed
+func TestUpdateTodo_Failed(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Id not found from sample
+		{
+			ReqQuery: `mutation {
+				updateTodo(id: "200", input: {name: "Edited", priority: low}) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+		// Input not completed
+		{
+			ReqQuery: `mutation {
+				updateTodo(id: "1", input: {name: "Edited"}) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+		// Empty id
+		{
+			ReqQuery: `mutation {
+						updateTodo(input: {name: "Edited"}) {
+						  id
+						  name
+						}
+					  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
+
 // updateTodo : Success
+func TestUpdateTodo_Success(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Normal create from data sample
+		{
+			ReqQuery: `mutation {
+				updateTodo(id: "1", input: {name: "Edited", priority: low}) {
+				  id
+				  name
+				  priority
+				  is_done
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+		// Normal create from data sample
+		{
+			ReqQuery: `mutation {
+				updateTodo(id: 2, input: {name: "Edited", priority: low}) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
+
 // deleteTodo : Failed
+func TestDeleteTodo_Failed(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Id not set from sample
+		{
+			ReqQuery: `mutation {
+				deleteTodo(id: ) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+		// Not set parameter id
+		{
+			ReqQuery: `mutation {
+					deleteTodo {
+						id
+						name
+					}
+				}`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
+
 // deleteTodo : Success
+func TestDeleteTodo_Success(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Normal delete from data sample
+		{
+			ReqQuery: `mutation {
+				deleteTodo(id: 1) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+		// Normal delete from data sample again
+		{
+			ReqQuery: `mutation {
+					deleteTodo(id: 1) {
+						id
+					}
+				}`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
+
 // reverseStatusTodo : Failed
+func TestReserveTodo_Failed(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Id not set from sample
+		{
+			ReqQuery: `mutation {
+				reverseStatusTodo(id: ) {
+				  id
+				  name
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+		// Not set parameter id
+		{
+			ReqQuery: `mutation {
+				reverseStatusTodo {
+						id
+						name
+					}
+				}`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusUnprocessableEntity,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
+
 // reverseStatusTodo : Success
+func TestReserveTodo_Success(t *testing.T) {
+	graphQLHander := setUpGraphHandler()
+
+	var testCase = []TestCaseGraph{
+		// Normal reverse status from data sample
+		{
+			ReqQuery: `mutation {
+				reverseStatusTodo(id: 1) {
+					id
+					name
+					is_done
+				}
+			  }`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+		// Normal reverse status from data sample
+		{
+			ReqQuery: `mutation {
+					reverseStatusTodo(id: 1) {
+						id
+						name
+						is_done
+					}
+				}`,
+			Exp: ExpectationResultTest{
+				ExpectedCode: http.StatusOK,
+			},
+		},
+	}
+
+	// Doing test with table test
+	for _, v := range testCase {
+		apitest.New().
+			Handler(graphQLHander).
+			Post("/query").
+			GraphQLQuery(v.ReqQuery).
+			Expect(t).
+			Status(v.Exp.ExpectedCode).
+			End()
+	}
+}
